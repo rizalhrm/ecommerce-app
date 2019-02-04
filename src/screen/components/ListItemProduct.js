@@ -18,7 +18,7 @@ class ListItemProduct extends Component{
                 </Body>
                 <Right>
                     <Button style={{height: 25}} primary onPress={() => navigate('DetailProduct', {product: product})}>
-                        <Text>Buy</Text>
+                        <Text>View</Text>
                     </Button>
                 </Right>
             </ListItem>
