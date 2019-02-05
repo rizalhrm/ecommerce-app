@@ -14,7 +14,7 @@ class ListItemProduct extends Component{
                 </Left>
                 <Body>
                     <Text>{product.name}</Text>
-                    <Text>Rp. {product.price}</Text>
+                    <Text style={{color: 'red'}}>Rp. {product.price}</Text>
                 </Body>
                 <Right>
                     <Button style={{height: 25}} primary onPress={() => navigate('DetailProduct', {product: product})}>

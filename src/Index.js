@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-import {createAppContainer, createStackNavigator, createBottomTabNavigator} from 'react-navigation';
+import {createAppContainer, createStackNavigator} from 'react-navigation';
+import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Icon, Button, Text} from 'native-base';
 
 import HomeScreen from './screen/Home/HomeScreen';
 import DetailProduct from './screen/Home/DetailProduct';
+import CartScreen from './screen/Cart/CartScreen';
 
 const HomeStack = createStackNavigator({
     Home: {
@@ -18,7 +20,7 @@ const HomeStack = createStackNavigator({
         headerRight: (<Button transparent light style={{alignSelf: 'center'}}><Icon name='search'/></Button>)
       })
     },
-    DetailProduct : {
+    DetailProduct: {
         screen: DetailProduct,
         navigationOptions: () => ({
             title: "Detail Product",
@@ -28,16 +30,34 @@ const HomeStack = createStackNavigator({
             headerTintColor: '#fff'
       })
     }
-  });
-  
+})
+
+const CartStack = createStackNavigator({
+    Cart: {
+      screen: CartScreen,
+      navigationOptions: () => ({
+        title: "Shopping Cart",
+        headerStyle: {
+            backgroundColor: '#3f48cc'
+        },
+        headerTintColor: '#fff'
+      })
+    }
+})
 
 const MainStack = createAppContainer(
-    createBottomTabNavigator(
+    createMaterialBottomTabNavigator(
         {
             Home: {
                 screen: HomeStack,
                 navigationOptions: {
                     title: "Home"
+                }
+            },
+            Cart: {
+                screen: CartStack,
+                navigationOptions: {
+                    title: "Cart"
                 }
             }
         },
@@ -57,10 +77,10 @@ const MainStack = createAppContainer(
             shifting:true,
             initialRouteName: 'Home',
             tabBarOptions: {
-                showLabel: false,
                 activeTintColor: "#3f48cc",
                 inactiveTintColor: "#787fec"
-            }
+            },
+            barStyle: { backgroundColor: '#3f48cc'}
         }
     )
 );
