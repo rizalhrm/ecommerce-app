@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
-import { View, Image } from 'react-native';
-import { Container, Content, Text, Button, List, ListItem, Left, Body, Right } from 'native-base';
+import { View, Container, Content, List } from 'native-base';
 
-import '../../data/data.js'
 import CartList from './components/CartList';
+import '../../data/data.js';
+
+import ToNext from './components/ToNext';
+import ToShop from './components/ToShop';
 
 export default class CartScreen extends Component {
 
@@ -15,28 +17,18 @@ export default class CartScreen extends Component {
     }
 
     render(){
-
         return(
             <Container>
                 <Content>
                     <List>
-                        {this.state.cart.map((carts, key) => <CartList key={key} cart={carts} />)}
+                        {cart.map((carts, key) => 
+                                <CartList
+                                    key={key} 
+                                    cart={carts} 
+                                />)
+                        }
                     </List>
-                    <List>
-                        <ListItem>
-                            <Left>
-                                <Button small rounded style={{ marginLeft: 30}}>
-                                    <Text>CheckOut</Text>
-                                </Button>
-                            </Left>
-                            <Body>
-                                <Button small block rounded style={{ backgroundColor: 'royalblue'}}>
-                                    <Text style={{fontSize: 12}}>Lanjut Belanja</Text>
-                                </Button>
-                            </Body>
-                            <Right/>
-                        </ListItem>
-                    </List>
+                        {this.state.cart.length < 1 ? <ToShop/> : <ToNext/> }
                 </Content>
             </Container>
         )

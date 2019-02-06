@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { ListItem, Left, Thumbnail, Body, Text, Button, Icon } from 'native-base';
 
+import '../../../data/data.js';
+
 export default class CartList extends Component{
+
     render(){
+
         const { cart } = this.props;
+
         return(
             <ListItem thumbnail>
                 <Left>
@@ -18,6 +23,7 @@ export default class CartList extends Component{
                     </Button>
                 </Body>
             </ListItem>
+
         )
     }
 }

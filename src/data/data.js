@@ -34,3 +34,5 @@ products = [
         description: 'Android 4.4.4 (KitKat), Android 4.4.4 Kitkat, Qualcomm MSM8916 Snapdragon 410, Kamera 2MP'
     }
 ];
+
+cart = [];

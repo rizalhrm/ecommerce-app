@@ -4,7 +4,6 @@ import  {Container, Icon, Content} from 'native-base';
 import { Card, Button, Image } from 'react-native-elements';
 
 import '../../data/data.js';
-import '../../data/cart.js';
 
 export default class DetailProduct extends React.Component {
 
@@ -14,6 +13,7 @@ export default class DetailProduct extends React.Component {
         const {product} = props.navigation.state.params;
 
         this.state = {
+            id : product.id,
             name: product.name,
             image: product.image,
             price: product.price,
