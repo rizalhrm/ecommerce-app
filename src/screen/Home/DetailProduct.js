@@ -19,7 +19,7 @@ export default class DetailProduct extends React.Component {
             image: product.image,
             price: product.price,
             description: product.description,
-            qty: product.qty
+            qty: 1
         }
     }
 
