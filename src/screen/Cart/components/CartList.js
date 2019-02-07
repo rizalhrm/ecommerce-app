@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, TouchableNativeFeedback } from 'react-native';
 import { ListItem, Left, Thumbnail, Body, Text, Button, Icon, Right } from 'native-base';
 
 import '../../../data/cart.js';
 
 export default class CartList extends Component{
+
+    constructor(props){
+        super(props);
+        this.state = {
+            idproduct : cart
+        }
+    }
 
     render(){
 
@@ -20,9 +27,11 @@ export default class CartList extends Component{
                     <Text style={{ color: 'grey' }}>Rp.{cart.price}</Text>
                 </Body>
                 <Right>
-                    <Button transparent small style={{ marginTop: -10, marginBottom: -10 }}>
-                        <Icon name="trash"/>
-                    </Button>
+                    <TouchableNativeFeedback onPress={this.props.onPressDel}>
+						<View style={{ marginTop: -10, marginBottom: -10 }}>
+                            <Icon name="trash" style={{color: '#ff0a0a'}}/>
+						</View>
+					</TouchableNativeFeedback>
                     <View style={{marginBottom : -15}}>
                         <TextInput keyboardType="numeric" maxLength={5} placeholder="Qty"/>
                     </View>

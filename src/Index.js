@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {createAppContainer, createStackNavigator} from 'react-navigation';
-import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
+import {createAppContainer, createStackNavigator, createBottomTabNavigator} from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Icon, Button, Text} from 'native-base';
 
@@ -17,7 +16,7 @@ const HomeStack = createStackNavigator({
             backgroundColor: '#3f48cc'
         },
         headerTintColor: '#fff',
-        headerRight: (<Button transparent light style={{alignSelf: 'center'}}><Icon name='search'/></Button>)
+        headerRight : (<Button transparent light style={{alignSelf: 'center'}}><Icon name='cart'/></Button>)
       })
     },
     DetailProduct: {
@@ -29,35 +28,26 @@ const HomeStack = createStackNavigator({
             },
             headerTintColor: '#fff'
       })
-    }
-})
-
-const CartStack = createStackNavigator({
+    },
     Cart: {
-      screen: CartScreen,
-      navigationOptions: () => ({
-        title : 'Shopping Cart',
-        headerStyle: {
-            backgroundColor: '#3f48cc'
-        },
-        headerTintColor: '#fff'
-      })
+        screen: CartScreen,
+        navigationOptions: () => ({
+            title: "Shopping Cart",
+            headerStyle: {
+                backgroundColor: '#3f48cc',
+            },
+            headerTintColor: '#fff'
+        })
     }
 })
 
 const MainStack = createAppContainer(
-    createMaterialBottomTabNavigator(
+    createBottomTabNavigator(
         {
             Home: {
                 screen: HomeStack,
                 navigationOptions: {
                     title: "Home"
-                }
-            },
-            Cart: {
-                screen: CartStack,
-                navigationOptions: {
-                    title: "Cart"
                 }
             }
         },
@@ -68,8 +58,6 @@ const MainStack = createAppContainer(
                     let iconName;
                     if (routeName === "Home") {
                         iconName = 'ios-home';
-                    } else if (routeName === "Cart") {
-                        iconName = 'md-cart';
                     }
                     return <Ionicons name={iconName} size={25} color={tintColor} />;
                 }
