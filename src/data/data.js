@@ -10,7 +10,7 @@ products = [
         id : 'product00002',
         name: 'Xiaomi 6A',
         image: 'https://p.ipricegroup.com/uploaded_586bc08ff3cc1b529563cad47a72d377.jpg',
-        price: '1.500.000.',
+        price: '1.500.000',
         description: 'Prosesor performa tinggi 12nm. Tampilan layar penuh 13,8cm (5,45"). Kamera 13MP | Desain ramping'
     }, 
     {
@@ -34,5 +34,3 @@ products = [
         description: 'Android 4.4.4 (KitKat), Android 4.4.4 Kitkat, Qualcomm MSM8916 Snapdragon 410, Kamera 2MP'
     }
 ];
-
-cart = [];

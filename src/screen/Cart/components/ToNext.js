@@ -14,7 +14,7 @@ class ToNext extends Component{
                 <Body>
                     <Button small block rounded
                     style={{ backgroundColor: 'royalblue'}}
-                    onPress={()=> {this.props.navigation.popToTop() }}>
+                    onPress={()=> {this.props.navigation.popToTop('') }}>
                         <Text style={{fontSize: 12}}>Lanjut Belanja</Text>
                     </Button>
                 </Body>

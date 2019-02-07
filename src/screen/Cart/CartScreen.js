@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { View, Container, Content, List } from 'native-base';
 
 import CartList from './components/CartList';
-import '../../data/data.js';
+import '../../data/cart.js';
 
 import ToNext from './components/ToNext';
 import ToShop from './components/ToShop';

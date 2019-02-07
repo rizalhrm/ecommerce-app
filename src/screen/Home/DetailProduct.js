@@ -4,6 +4,7 @@ import  {Container, Icon, Content} from 'native-base';
 import { Card, Button, Image } from 'react-native-elements';
 
 import '../../data/data.js';
+import '../../data/cart.js';
 
 export default class DetailProduct extends React.Component {
 
@@ -34,7 +35,7 @@ export default class DetailProduct extends React.Component {
                 title={this.state.name}>
                 <Image
                 source={{ uri: this.state.image }}
-                style={{ width: 300, height:300, alignContent: 'center' }}
+                style={{ width: 300, height:300, alignContent: 'center', resizeMode:'contain' }}
                 />
                 <View style={{flex: 1}}>
                     <Text style={{color: 'red', marginBottom: 10, fontSize:16, justifyContent: 'space-between', textAlign:"center"}}>
