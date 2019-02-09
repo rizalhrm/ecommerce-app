@@ -42,7 +42,7 @@ export default class PaymentScreen extends Component {
               },
               {text: 'OK', onPress: () => {
                     this.state.cart.length = 0;
-                    this.props.navigation.navigate('Home', {
+                    this.props.navigation.navigate('InfoPembayaran', {
                     onBack: () => this.refresh()
                     });
                 }},

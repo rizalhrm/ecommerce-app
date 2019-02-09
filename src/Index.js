@@ -9,6 +9,7 @@ import DetailProduct from './screen/Home/DetailProduct';
 import CartScreen from './screen/Cart/CartScreen';
 import ChatScreen from './screen/ChatScreen';
 import PaymentScreen from './screen/PaymentScreen';
+import InfoPembayaran from './screen/InfoPembayaran';
 
 import './data/cart.js';
 
@@ -72,9 +73,18 @@ const HomeStack = createStackNavigator({
                 </View>
             )
         })
+    },
+    InfoPembayaran: {
+        screen: InfoPembayaran,
+        navigationOptions: () => ({
+            title: "Info Pembayaran",
+            headerStyle: {
+                backgroundColor: '#3f48cc',
+            },
+            headerTintColor: '#fff'
+        })
     }
 })
-
 
 const ChatStack = createStackNavigator({
     Chat: {
@@ -88,7 +98,6 @@ const ChatStack = createStackNavigator({
         })
     }
 })
-
 
 const MainStack = createAppContainer(
     createBottomTabNavigator(
