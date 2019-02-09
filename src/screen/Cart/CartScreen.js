@@ -127,7 +127,7 @@ export default class CartScreen extends Component {
                 <CardItem>
                 <Body>
                     <Text>Total Item: {totalItem}</Text>
-                    <Text>Total: Rp {this.formatNumber(totalPrice)}</Text>
+                    <Text>Total: Rp {totalPrice}</Text>
                 </Body>
                 </CardItem>
                 <CardItem footer>
