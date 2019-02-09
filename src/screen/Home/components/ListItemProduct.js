@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { ListItem, Left, Right, Thumbnail, Body, Text, Button} from 'native-base';
 
 class ListItemProduct extends Component{
+
+    formatNumber = (num) => {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+
     render(){
         const { product, navigate } = this.props;
         return(
@@ -14,7 +19,7 @@ class ListItemProduct extends Component{
                 </Left>
                 <Body>
                     <Text>{product.name}</Text>
-                    <Text style={{color: 'red'}}>Rp. {product.price}</Text>
+                    <Text style={{color: 'red'}}>Rp {this.formatNumber(product.price)}</Text>
                 </Body>
                 <Right>
                     <Button style={{height: 25}} primary onPress={() => navigate('DetailProduct', {product: product})}>

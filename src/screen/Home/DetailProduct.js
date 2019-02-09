@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Alert} from 'react-native';
 import  {Container, Icon, Content} from 'native-base';
 import { Card, Button, Image } from 'react-native-elements';
 
@@ -24,8 +24,40 @@ export default class DetailProduct extends React.Component {
     }
 
     addToCart = () => {
-        cart.push(this.state);
-        this.props.navigation.navigate('Cart');
+        let newProduct = {
+            id: this.state.id,
+            name: this.state.name,
+            price: this.state.price,
+            image: this.state.image,
+            desc: this.state.description,
+            qty: 1
+          };
+
+        let ifExist = false;
+
+        cart.map(data => {
+            if (data.id == this.state.id) {
+                ifExist = true;
+            }
+        });
+
+        if (ifExist) {
+            cart.map(data => {
+            if (data.id == this.state.id) {
+                Object.assign(data, {
+                    qty: data.qty + 1
+                });
+                this.props.navigation.navigate("Cart");
+            }
+        });
+        } else {
+            cart.push(newProduct);
+            this.props.navigation.navigate("Cart", { cart });
+        }
+    }
+
+    formatNumber = (num) => {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
     
     render(){
@@ -33,16 +65,16 @@ export default class DetailProduct extends React.Component {
         <Container>
             <Content>
                 <Card
-                title={this.state.name}>
+                title={this.state.name} titleStyle={{fontSize: 18}}>
                 <Image
                 source={{ uri: this.state.image }}
-                style={{ width: 300, height:300, alignContent: 'center', resizeMode:'contain' }}
+                style={{ width: 300, height:300, alignContent: 'center', resizeMode:'contain', marginBottom: 5 }}
                 />
                 <View style={{flex: 1}}>
                     <Text style={{color: 'red', marginBottom: 10, fontSize:16, justifyContent: 'space-between', textAlign:"center"}}>
-                    Rp {this.state.price}
+                    Rp {this.formatNumber(this.state.price)}
                     </Text>
-                    <Text style={{fontWeight: 'bold'}}>Description : </Text>
+                    <Text style={{fontWeight: 'bold' , color: 'black'}}>Description : </Text>
                     <Text style={{color: 'black', marginBottom: 10, fontSize:13, alignSelf:"stretch", justifyContent:"center"}}>
                     {this.state.description}
                     </Text>

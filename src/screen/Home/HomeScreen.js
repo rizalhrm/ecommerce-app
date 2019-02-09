@@ -6,7 +6,6 @@ import Swiper from 'react-native-swiper';
 import ListItemProduct from './components/ListItemProduct';
 import '../../data/data.js';
 
-
 export default class HomeScreen extends React.Component {
 
     constructor(){
@@ -22,15 +21,15 @@ export default class HomeScreen extends React.Component {
         <Container>
             <Content>
                 <Swiper style={styles.wrapper} showsButtons={true} paginationStyle={{position:'absolute', top:250, right: 10, bottom: 15}} activeDotColor="#dd0057" autoplay={true}>
-                    <View style={styles.slide1}>
+                    <View style={styles.slide}>
                         <Image style={{width:"50%", height:200, alignItems: 'center'}} source={{uri : "https://bit.ly/2GdJQRj"}} />
                         <Text style={styles.bestSeller}>Xiaomi 6A</Text>
                     </View>
-                    <View style={styles.slide1}>
+                    <View style={styles.slide}>
                         <Image style={{width:"50%", height:200, alignItems: 'center'}} source={{uri : "http://udah.pw/KgvcZ"}} />
                         <Text style={styles.bestSeller}>Samsung Galaxy A8 Plus</Text>
                     </View>
-                    <View style={styles.slide1}>
+                    <View style={styles.slide}>
                         <Image style={{width:"50%", height:200, alignItems: 'center'}} source={{uri : "https://bit.ly/2TyOjRF"}} />
                         <Text style={styles.bestSeller}>Vivo V11 Pro</Text>
                     </View>
@@ -54,7 +53,7 @@ const styles = StyleSheet.create({
     wrapper: {
         height:280
     },
-    slide1: {
+    slide: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
