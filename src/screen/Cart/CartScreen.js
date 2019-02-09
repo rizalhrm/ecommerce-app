@@ -127,7 +127,7 @@ export default class CartScreen extends Component {
                 <CardItem>
                 <Body>
                     <Text>Total Item: {totalItem}</Text>
-                    <Text>Total: Rp {totalPrice}</Text>
+                    <Text>Total: Rp {isNaN(parseInt(totalPrice)) ? 0 : parseInt(totalPrice)}</Text>
                 </Body>
                 </CardItem>
                 <CardItem footer>
