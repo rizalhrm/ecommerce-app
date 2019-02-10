@@ -3,9 +3,6 @@ import {TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import { View,
     Container,
     Content,
-    List,
-    ListItem,
-    Left,
     Thumbnail,
     Body,
     Text,
@@ -33,7 +30,7 @@ export default class CartScreen extends Component {
         let index = cart.indexOf(id);
         prod.splice(index, 1);
         this.props.navigation.navigate('Cart', {
-            Refresh: () => this.forceUpdate()
+            Refresh: () => this.refresh()
         });
     }
 

@@ -55,7 +55,7 @@ export default class PaymentScreen extends Component {
         console.disableYellowBox = true;
         const Payment = this.props.navigation.getParam("totalPrice");
         let ongkosKirim = this.state.chosenKurir;
-        let Total = Payment + ongkosKirim;
+        let Total = parseInt(Payment) + parseInt(ongkosKirim);
         return(
             <Container>
                 <Content padder>

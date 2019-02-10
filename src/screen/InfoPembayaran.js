@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import  {Container, Icon, Content} from 'native-base';
-import { Card, Button, Image } from 'react-native-elements';
+import  {Container, Content} from 'native-base';
+import { Card } from 'react-native-elements';
 
 export default class InfoPembayaran extends React.Component {
     
