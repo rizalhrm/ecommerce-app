@@ -1,22 +1,61 @@
 import React from 'react';
-import {Image, StyleSheet} from 'react-native';
-import {View, Text, Container, Content, List} from 'native-base';
+import {Image, StyleSheet, FlatList} from 'react-native';
+import {View, Text, Container, Content, Left, Right, List, ListItem, Button, Thumbnail, Body} from 'native-base';
 import Swiper from 'react-native-swiper';
-
-import ListItemProduct from './components/ListItemProduct';
-import '../../data/data.js';
+import axios from 'axios';
 
 export default class HomeScreen extends React.Component {
 
     constructor(){
         super();
         this.state = {
-            product: products
-        }
+            data: []
+          }
     }
 
+    componentWillMount() {
+        axios({
+            method: 'get',
+            url: 'http://192.168.0.26:3333/api/v1/products'
+        })
+        .then(res => {
+            this.setState({
+                data: res.data
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+    
+    formatNumber = (num) => {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+
+    _keyExtractor = (item, index) => item.id.toString();
+
+    renderItem = ({ item, index }) => (
+        <ListItem 
+        thumbnail
+        onPress={() => this.props.navigation.navigate('DetailProduct', {item})}
+        >
+            <Left>
+                <Thumbnail square source={{ uri: item.image }} />
+            </Left>
+            <Body>
+                <Text>{item.name}</Text>
+                <Text style={{color: 'black', fontSize: 13}}>Rp {this.formatNumber(item.price)}</Text>
+            </Body>
+            <Right>
+                <Button style={{height: 25}} primary onPress={() => this.props.navigation.navigate('DetailProduct', {item})}>
+                    <Text>View</Text>
+                </Button>
+            </Right>
+        </ListItem>
+    )
+    
+
     render(){
-        const { navigate } = this.props.navigation;
         return (
         <Container>
             <Content>
@@ -35,10 +74,19 @@ export default class HomeScreen extends React.Component {
                     </View>
                 </Swiper>
 
+                <View style={{ flex: 1, flexDirection: "row", margin: 10 }}>
+                    <View style={{ width: 10, height: 25, backgroundColor: "#4389f9" }}/>
+                        <Text style={{ fontWeight: "bold", fontSize: 18, marginLeft: 5 }}>
+                                Products List
+                        </Text>
+                </View>
                 <View>
-                    <Text style={{marginLeft: 12}}>Product List</Text>
                     <List>
-                        {this.state.product.map((product, key) => <ListItemProduct key={key} product={product} navigate={navigate} />)}
+                        <FlatList
+                            data={this.state.data}
+                            keyExtractor={this._keyExtractor}
+                            renderItem={this.renderItem}
+                        />
                     </List>
                 </View>
 

@@ -3,9 +3,7 @@ import { ListItem, Left, Right, Thumbnail, Body, Text, Button} from 'native-base
 
 class ListItemProduct extends Component{
 
-    formatNumber = (num) => {
-        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-    }
+   
 
     render(){
         const { product, navigate } = this.props;

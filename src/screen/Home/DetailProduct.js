@@ -2,25 +2,41 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import  {Container, Icon, Content} from 'native-base';
 import { Card, Button, Image } from 'react-native-elements';
-
-import '../../data/data.js';
-import '../../data/cart.js';
+import axios from 'axios';
 
 export default class DetailProduct extends React.Component {
 
     constructor(props){
         super(props);
 
-        const {product} = props.navigation.state.params;
+        this.item = props.navigation.state.params.item;
 
         this.state = {
-            id : product.id,
-            name: product.name,
-            image: product.image,
-            price: product.price,
-            description: product.description,
-            qty: 1
+            id : this.item.id,
+            name : this.item.name,
+            image : this.item.image,
+            price : this.item.price,
+            description : this.item.description
+
         }
+    }
+
+    componentWillMount() {
+        axios({
+            method: 'get',
+            url: `http://192.168.0.26:3333/api/v1/products/${this.state.id}`
+            })
+            .then(res => {
+                this.setState({
+                    name: res.name,
+                    image: res.image,
+                    price: res.price,
+                    description: res.description
+                })
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
     addToCart = () => {
@@ -29,7 +45,6 @@ export default class DetailProduct extends React.Component {
             name: this.state.name,
             price: this.state.price,
             image: this.state.image,
-            desc: this.state.description,
             qty: 1
           };
 
@@ -71,7 +86,7 @@ export default class DetailProduct extends React.Component {
                 style={{ width: 300, height:300, alignContent: 'center', resizeMode:'contain', marginBottom: 5 }}
                 />
                 <View style={{flex: 1}}>
-                    <Text style={{color: 'red', marginBottom: 10, fontSize:16, justifyContent: 'space-between', textAlign:"center"}}>
+                    <Text style={{color: 'black', marginBottom: 10, fontSize:16, justifyContent: 'space-between', textAlign:"center"}}>
                     Rp {this.formatNumber(this.state.price)}
                     </Text>
                     <Text style={{fontWeight: 'bold' , color: 'black'}}>Description : </Text>

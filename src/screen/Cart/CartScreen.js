@@ -34,7 +34,7 @@ export default class CartScreen extends Component {
         });
     }
 
-    _quantityMinus = (qty, id) => () => {
+    quantityMinus = (qty, id) => () => {
         if (qty === 1) {
           return false;
         } else {
@@ -51,7 +51,7 @@ export default class CartScreen extends Component {
         }
     };
 
-    _quantityPlus = (qty, id) => () => {
+    quantityPlus = (qty, id) => () => {
         this.setState(prevState => ({
           cart: prevState.cart.map(obj =>
             obj.id === id
@@ -91,13 +91,13 @@ export default class CartScreen extends Component {
                                     <View style={[styles.col, styles.colCenter]}>
                                         <View style={styles.row}>
                                             <View style={styles.dempet}>
-                                                <Button style={{backgroundColor: 'royalblue'}} small onPress={this._quantityMinus(item.qty, item.id)}>
+                                                <Button style={{backgroundColor: 'royalblue'}} small onPress={this.quantityMinus(item.qty, item.id)}>
                                                     <Icon style={{ color: '#fff'}} name="remove" />
                                                 </Button>
                                                 <View style={{ flex: 4, justifyContent: 'center', alignItems: 'center', marginRight: -10, marginLeft: -10, backgroundColor: '#d9d5d5' }}>
                                                     <Text>{item.qty}</Text>
                                                 </View>
-                                                <Button style={{backgroundColor: 'royalblue'}} onPress={this._quantityPlus(item.qty, item.id)} small>
+                                                <Button style={{backgroundColor: 'royalblue'}} onPress={this.quantityPlus(item.qty, item.id)} small>
                                                     <Icon style={{ color: '#fff'}}  name="add" />
                                                 </Button>
                                             </View>
@@ -134,10 +134,10 @@ export default class CartScreen extends Component {
                         <Text>CheckOut</Text>
                     </Button>
                     
-                    <Button small
-                    style={{ backgroundColor: 'royalblue', marginLeft : 8}}
+                    <Button bordered small
+                    style={{ marginLeft : 8}}
                     onPress={()=> this.props.navigation.popToTop()}>
-                        <Text style={{fontSize: 12}}>Lanjut Belanja</Text>
+                        <Text>Shop More</Text>
                     </Button>
                 </CardItem>
                 </Card> }

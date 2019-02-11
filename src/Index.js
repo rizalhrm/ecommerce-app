@@ -9,7 +9,7 @@ import DetailProduct from './screen/Home/DetailProduct';
 import CartScreen from './screen/Cart/CartScreen';
 import ChatScreen from './screen/ChatScreen';
 import PaymentScreen from './screen/PaymentScreen';
-import InfoPembayaran from './screen/InfoPembayaran';
+import InfoPayment from './screen/InfoPayment';
 
 import './data/cart.js';
 
@@ -36,12 +36,22 @@ const HomeStack = createStackNavigator({
     },
     DetailProduct: {
         screen: DetailProduct,
-        navigationOptions: () => ({
-            title: "Detail Product",
+        navigationOptions: ({navigation}) => ({
+            title: "Detail Of Product",
             headerStyle: {
                 backgroundColor: '#3f48cc',
             },
-            headerTintColor: '#fff'
+            headerTintColor: '#fff',
+            headerRight: (
+                <View style={{padding: 5}}>
+                <View style={{position: 'absolute', height: 20, width: 20, borderRadius: 10, backgroundColor: 'rgba(95, 197, 123, 0.8)', right: 15, bottom: 20, marginRight: 10, alignItems: 'center', justifyContent: 'center', zIndex: 2000}}>
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>{cart.length}</Text>
+                </View>
+                    <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+                        <Icon style={{color: 'white', marginRight: 10, alignItems: 'center', alignContent: 'center', alignSelf: 'center'}} name='cart'/>
+                    </TouchableOpacity>
+                </View>
+            )
       })
     },
     Cart: {
@@ -56,7 +66,7 @@ const HomeStack = createStackNavigator({
     },
     Payment: {
         screen: PaymentScreen,
-        navigationOptions: () => ({
+        navigationOptions: ({navigation}) => ({
             title: "Payment",
             headerStyle: {
                 backgroundColor: '#3f48cc',
@@ -74,10 +84,10 @@ const HomeStack = createStackNavigator({
             )
         })
     },
-    InfoPembayaran: {
-        screen: InfoPembayaran,
+    InfoPayment: {
+        screen: InfoPayment,
         navigationOptions: () => ({
-            title: "Info Pembayaran",
+            title: "Info Payment",
             headerStyle: {
                 backgroundColor: '#3f48cc',
             },

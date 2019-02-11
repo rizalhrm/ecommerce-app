@@ -96,8 +96,8 @@ export default class PaymentScreen extends Component {
                                         <Text style={styles.font}>Total : Rp {this.formatNumber(Total)}</Text>
                             </Body>
                             </CardItem>
-                            <CardItem footer bordered>
-                                    <Button style={{width: 90}} success onPress={this.finish}>
+                            <CardItem footer bordered style={{alignContent: 'center'}}>
+                                    <Button style={{width: 90, alignItems: 'center'}} success onPress={this.finish}>
                                         <Text style={{color: '#fff', textAlign: 'center'}}>Selesai</Text>
                                     </Button>
                             </CardItem>

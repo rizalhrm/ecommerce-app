@@ -3,7 +3,7 @@ import {View, Text} from 'react-native';
 import  {Container, Content} from 'native-base';
 import { Card } from 'react-native-elements';
 
-export default class InfoPembayaran extends React.Component {
+export default class InfoPayment extends React.Component {
     
     render(){
         return (
