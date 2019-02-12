@@ -12,8 +12,8 @@ import { View,
     Footer,
     CardItem, Card
 } from 'native-base';
+import axios from 'axios';
 
-import '../../data/cart.js';
 import ToShop from './components/ToShop';
 
 export default class CartScreen extends Component {
@@ -21,8 +21,24 @@ export default class CartScreen extends Component {
     constructor(){
         super();
         this.state = {
-            cart: cart
+            cart : [],
+            product : []
         }
+    }
+
+    componentWillMount() {
+        axios({
+            method: 'get',
+            url: 'http://192.168.43.233:3333/api/v1/orders'
+        })
+        .then(res => {
+            this.setState({
+                cart: res.data
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     delCart = (id) => {
@@ -83,23 +99,23 @@ export default class CartScreen extends Component {
                             <CardItem>
                                 <Body>
                                 <View style={styles.container}>
-                                    <View><Thumbnail square source={{ uri: item.image }} /></View>
+                                    <View><Thumbnail square source={{ uri: item.product.image }} /></View>
                                     <View style={[styles.col, styles.colCenter]}>
-                                        <View><Text style={{fontSize: 15}}>{item.name}</Text></View>
-                                        <View><Text style={{ color: 'grey' , fontSize: 14 }}>Rp.{item.price}</Text></View>
+                                        <View><Text style={{fontSize: 17}}>{item.product.name}</Text></View>
+                                        <View><Text style={{ color: 'grey' , fontSize: 15 }}>Rp.{item.price}</Text></View>
                                     </View>
                                     <View style={[styles.col, styles.colCenter]}>
                                         <View style={styles.row}>
                                             <View style={styles.dempet}>
-                                                <Button style={{backgroundColor: 'royalblue'}} small onPress={this.quantityMinus(item.qty, item.id)}>
-                                                    <Icon style={{ color: '#fff'}} name="remove" />
-                                                </Button>
-                                                <View style={{ flex: 4, justifyContent: 'center', alignItems: 'center', marginRight: -10, marginLeft: -10, backgroundColor: '#d9d5d5' }}>
+                                                <TouchableOpacity style={{backgroundColor: 'grey', borderRadius: 19, width: 25, height: 25, alignItems: 'center', justifyCenter: 'center', marginLeft : 20, alignContent: 'center' }} onPress={this.quantityMinus(item.qty, item.id)}>
+                                                    <Icon style={{ color: '#fff', fontSize: 17, top: 4}} name="remove" />
+                                                </TouchableOpacity>
+                                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                     <Text>{item.qty}</Text>
                                                 </View>
-                                                <Button style={{backgroundColor: 'royalblue'}} onPress={this.quantityPlus(item.qty, item.id)} small>
-                                                    <Icon style={{ color: '#fff'}}  name="add" />
-                                                </Button>
+                                                <TouchableOpacity style={{backgroundColor: 'grey', borderRadius: 19, width: 25, height: 25, alignItems: 'center', justifyCenter: 'center', marginRight : 20, alignContent: 'center'}} onPress={this.quantityPlus(item.qty, item.id)}>
+                                                    <Icon style={{ color: '#fff', fontSize: 17, top: 4}} name="add" />
+                                                </TouchableOpacity>
                                             </View>
                                             <View style={{alignItems : 'center'}}>
                                                 <TouchableOpacity onPress={() => this.delCart(item.id)}>
@@ -163,9 +179,7 @@ const styles = StyleSheet.create({
     dempet: {
         flexDirection:'row',
         flexWrap:'wrap',
-        borderStyle : 'solid',
-        borderColor: 'blue',
-        borderWidth:  1
+        justifyContent: 'center'
     },
     row: {
         flex: 1,

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, FlatList, Alert} from 'react-native';
-import { Card, CardItem, Body, Button, Text, Container, Content, Form, Item, Input, Label, Icon, Textarea, List, ListItem, Picker } from 'native-base';
+import { Card, CardItem, Body, Button, Text, Container, Content, Form, Item, Input, Label, Picker, Right } from 'native-base';
 
 import '../data/cart';
 import '../data/kurir';
@@ -42,7 +42,7 @@ export default class PaymentScreen extends Component {
               },
               {text: 'OK', onPress: () => {
                     this.state.cart.length = 0;
-                    this.props.navigation.navigate('InfoPembayaran', {
+                    this.props.navigation.navigate('InfoPayment', {
                     onBack: () => this.refresh()
                     });
                 }},
@@ -53,9 +53,9 @@ export default class PaymentScreen extends Component {
 
     render(){
         console.disableYellowBox = true;
-        const Payment = this.props.navigation.getParam("totalPrice");
-        let ongkosKirim = this.state.chosenKurir;
-        let Total = parseInt(Payment) + parseInt(ongkosKirim);
+        const payment = this.props.navigation.getParam("totalPrice");
+        let shippingcost = this.state.chosenKurir;
+        let total = parseInt(payment) + parseInt(shippingcost);
         return(
             <Container>
                 <Content padder>
@@ -86,23 +86,23 @@ export default class PaymentScreen extends Component {
                                    {this.arrayKurir()}
                                 </Picker>
                             </Item>
-                            
                         </Form>
-                        <Card>
-                            <CardItem bordered>
-                            <Body>
-                                        <Text style={styles.font}>Subtotal : Rp {this.formatNumber(Payment)}</Text>
-                                        <Text style={styles.font}>Shipping Cost : Rp {this.formatNumber(ongkosKirim)} </Text>
-                                        <Text style={styles.font}>Total : Rp {this.formatNumber(Total)}</Text>
-                            </Body>
-                            </CardItem>
-                            <CardItem footer bordered style={{alignContent: 'center'}}>
-                                    <Button style={{width: 90, alignItems: 'center'}} success onPress={this.finish}>
+                        <View>
+                            <Card>
+                                <CardItem>
+                                <Body>
+                                            <Text style={styles.font}>Subtotal : Rp {this.formatNumber(payment)}</Text>
+                                            <Text style={styles.font}>Shipping Cost : Rp {this.formatNumber(shippingcost)} </Text>
+                                            <Text style={styles.font}>Total : Rp {this.formatNumber(total)}</Text>
+                                </Body>
+                                </CardItem>
+                                <CardItem footer style={{alignContent: 'center'}}>
+                                    <Button style={{width: 90, alignItems: 'center'}} primary onPress={this.finish}>
                                         <Text style={{color: '#fff', textAlign: 'center'}}>Selesai</Text>
                                     </Button>
-                            </CardItem>
-                        </Card>
-            
+                                </CardItem>
+                            </Card>
+                        </View>
                 </Content>
             </Container>
         )
