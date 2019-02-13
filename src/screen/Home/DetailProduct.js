@@ -12,6 +12,7 @@ export default class DetailProduct extends React.Component {
         this.item = this.props.navigation.state.params.item;
 
         this.state = {
+            checkCarts : [],
             detail : []
         }
     }
@@ -19,51 +20,69 @@ export default class DetailProduct extends React.Component {
     componentDidMount() {
         axios({
             method: 'get',
-            url: `http://192.168.43.233:3333/api/v1/product/${this.item.id}`
+            url: `http://192.168.0.26:3333/api/v1/product/${this.item.id}`
             })
-            .then(res => {
-                this.setState({
-                    detail : res.data
-                })
+        .then(res => {
+            this.setState({
+                detail : res.data
             })
-            .catch(err => {
-                console.log(err);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
+        axios({
+            method: 'get',
+            url: 'http://192.168.0.26:3333/api/v1/orders'
+        })
+        .then(res =>  {
+            this.setState({
+                checkCarts : res.data
             })
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     addToCart = () => {
 
-        axios({
-            method: 'post',
-            url: 'http://192.168.43.233:3333/api/v1/order',
-            data: {
-                product_id: this.item.id,
-                price: this.state.detail.price,
-                qty: 1
+        let exist = false
+        let currentQty = 0
+        this.state.checkCarts.map(data => {
+            if (data.product_id == this.state.detail.id) {
+                checkCartId = data.id
+                exist = true
+                currentQty = data.qty
             }
         })
-        .then(res =>  {
-            this.props.navigation.navigate("Cart");
-        })
 
-        let ifExist = false;
-
-        cart.map(data => {
-            if (data.id == this.state.id) {
-                ifExist = true;
-            }
-        });
-
-        if (ifExist) {
-            cart.map(data => {
-            if (data.id == this.state.id) {
-                Object.assign(data, {
-                    qty: data.qty + 1
-                });
+        if (exist) {
+            axios({
+                method: 'patch',
+                url: `http://192.168.0.26:3333/api/v1/order/${checkCartId}`,
+                data: {
+                    qty: currentQty + 1
+                }
+            })
+            .then(res =>  {
                 this.props.navigation.navigate("Cart");
-            }
-        });
-        } 
+            })
+        }
+        else {
+            axios({
+                method: 'post',
+                url: 'http://192.168.0.26:3333/api/v1/order',
+                data: {
+                    product_id: this.item.id,
+                    price: this.state.detail.price,
+                    qty: 1
+                }
+            })
+            .then(res =>  {
+                this.props.navigation.navigate("Cart");
+            })
+        }
     }
 
     formatNumber = (num) => {

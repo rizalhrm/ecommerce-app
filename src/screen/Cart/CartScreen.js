@@ -22,7 +22,8 @@ export default class CartScreen extends Component {
         super();
         this.state = {
             cart : [],
-            product : []
+            product : [],
+            price : 0
         }
     }
 
@@ -54,34 +55,62 @@ export default class CartScreen extends Component {
         
     }
 
-    quantityMinus = (qty, id) => () => {
+    quantityMinus = (qty, id, price) => () => {
+
         if (qty === 1) {
-          return false;
-        } else {
-          this.setState(prevState => ({
+            return false;
+          } else {
+
+            axios({
+                method: 'patch',
+                url: `http://192.168.0.26:3333/api/v1/order/${id}`,
+                data: {
+                    qty: qty - 1,
+                    price : (qty - 1) * price
+                }
+            })
+            .then(res =>  {
+                
+            })
+    
+            this.setState(prevState => ({
+              cart: prevState.cart.map(obj =>
+                obj.id === id
+                  ? Object.assign(obj, {
+                      qty : obj.qty - 1,
+                      price: (obj.qty - 1) * price
+                    })
+                  : obj
+              )
+            }));
+          }
+    };
+
+    quantityPlus = (qty, id, price) => () => {
+
+        axios({
+            method: 'patch',
+            url: `http://192.168.0.26:3333/api/v1/order/${id}`,
+            data: {
+                qty: qty + 1,
+                price : (qty + 1) * price
+            }
+        })
+        .then(res =>  {
+
+        })
+
+        this.setState(prevState => ({
             cart: prevState.cart.map(obj =>
               obj.id === id
                 ? Object.assign(obj, {
-                    qty: obj.qty - 1,
-                    subtotal: (obj.qty - 1) * obj.price
+                    qty: obj.qty + 1,
+                    price: (obj.qty + 1) * price
                   })
                 : obj
             )
-          }));
-        }
-    };
+          }));  
 
-    quantityPlus = (qty, id) => () => {
-        this.setState(prevState => ({
-          cart: prevState.cart.map(obj =>
-            obj.id === id
-              ? Object.assign(obj, {
-                  qty: obj.qty + 1,
-                  subtotal: (obj.qty + 1) * obj.price
-                })
-              : obj
-          )
-        }));
     };
 
     formatNumber = (num) => {
@@ -89,8 +118,9 @@ export default class CartScreen extends Component {
     }
 
     render(){
-        let totalItem = 0;
+        let totalItem = this.state.cart.length;
         let totalPrice = 0;
+        this.state.cart.map(obj => (totalPrice = totalPrice + obj.price));
 
         return(
             <Container>
@@ -105,18 +135,18 @@ export default class CartScreen extends Component {
                                     <View><Thumbnail square source={{ uri: item.product.image }} /></View>
                                     <View style={[styles.col, styles.colCenter]}>
                                         <View><Text style={{fontSize: 17}}>{item.product.name}</Text></View>
-                                        <View><Text style={{ color: 'grey' , fontSize: 15 }}>Rp. {this.formatNumber(item.price)}</Text></View>
+                                        <View><Text style={{ color: 'grey' , fontSize: 15 }}>Rp. {this.formatNumber(item.product.price)}</Text></View>
                                     </View>
                                     <View style={[styles.col, styles.colCenter]}>
                                         <View style={styles.row}>
                                             <View style={styles.dempet}>
-                                                <TouchableOpacity style={{backgroundColor: 'grey', borderRadius: 19, width: 25, height: 25, alignItems: 'center', justifyCenter: 'center', marginLeft : 20, alignContent: 'center' }} onPress={this.quantityMinus(item.qty, item.id)}>
+                                                <TouchableOpacity style={{backgroundColor: '#c3c3c3', borderRadius: 19, width: 25, height: 25, alignItems: 'center', justifyCenter: 'center', marginLeft : 20, alignContent: 'center' }} onPress={this.quantityMinus(item.qty, item.id, item.product.price)}>
                                                     <Icon style={{ color: '#fff', fontSize: 17, top: 4}} name="remove" />
                                                 </TouchableOpacity>
                                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                     <Text>{item.qty}</Text>
                                                 </View>
-                                                <TouchableOpacity style={{backgroundColor: 'grey', borderRadius: 19, width: 25, height: 25, alignItems: 'center', justifyCenter: 'center', marginRight : 20, alignContent: 'center'}} onPress={this.quantityPlus(item.qty, item.id)}>
+                                                <TouchableOpacity style={{backgroundColor: '#c3c3c3', borderRadius: 19, width: 25, height: 25, alignItems: 'center', justifyCenter: 'center', marginRight : 20, alignContent: 'center'}} onPress={this.quantityPlus(item.qty, item.id, item.product.price)}>
                                                     <Icon style={{ color: '#fff', fontSize: 17, top: 4}} name="add" />
                                                 </TouchableOpacity>
                                             </View>
@@ -138,7 +168,7 @@ export default class CartScreen extends Component {
                         />
                     
                 </Content>
-                <Footer style={{backgroundColor :  'transparent'}}>
+                <Footer style={{ marginTop: 80, backgroundColor :  'transparent'}}>
                     {this.state.cart.length < 1 ? <ToShop/> : <Card style={{position : 'absolute' , bottom : 10}}>
                 <CardItem>
                 <Body>

@@ -11,7 +11,9 @@ import ChatScreen from './screen/ChatScreen';
 import PaymentScreen from './screen/PaymentScreen';
 import InfoPayment from './screen/InfoPayment';
 
-import './data/cart.js';
+state = {
+    totalitemcart: []
+}
 
 const HomeStack = createStackNavigator({
     Home: {
@@ -25,7 +27,7 @@ const HomeStack = createStackNavigator({
         headerRight: (
             <View style={{padding: 5}}>
             <View style={{position: 'absolute', height: 20, width: 20, borderRadius: 10, backgroundColor: 'rgba(95, 197, 123, 0.8)', right: 15, bottom: 20, marginRight: 10, alignItems: 'center', justifyContent: 'center', zIndex: 2000}}>
-            <Text style={{ color: 'white', fontWeight: 'bold' }}>{cart.length}</Text>
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>{this.state.totalitemcart.length}</Text>
             </View>
                 <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                     <Icon style={{color: 'white', marginRight: 10, alignItems: 'center', alignContent: 'center', alignSelf: 'center'}} name='cart'/>
@@ -45,7 +47,7 @@ const HomeStack = createStackNavigator({
             headerRight: (
                 <View style={{padding: 5}}>
                 <View style={{position: 'absolute', height: 20, width: 20, borderRadius: 10, backgroundColor: 'rgba(95, 197, 123, 0.8)', right: 15, bottom: 20, marginRight: 10, alignItems: 'center', justifyContent: 'center', zIndex: 2000}}>
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>{cart.length}</Text>
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>{this.state.totalitemcart.length}</Text>
                 </View>
                     <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                         <Icon style={{color: 'white', marginRight: 10, alignItems: 'center', alignContent: 'center', alignSelf: 'center'}} name='cart'/>
@@ -75,7 +77,7 @@ const HomeStack = createStackNavigator({
             headerRight: (
                 <View style={{padding: 5}}>
                 <View style={{position: 'absolute', height: 20, width: 20, borderRadius: 10, backgroundColor: 'rgba(95, 197, 123, 0.8)', right: 15, bottom: 20, marginRight: 10, alignItems: 'center', justifyContent: 'center', zIndex: 2000}}>
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>{cart.length}</Text>
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>{this.state.totalitemcart.length}</Text>
                 </View>
                     <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                         <Icon style={{color: 'white', marginRight: 10, alignItems: 'center', alignContent: 'center', alignSelf: 'center'}} name='cart'/>

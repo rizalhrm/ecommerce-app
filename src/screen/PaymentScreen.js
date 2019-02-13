@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, FlatList, Alert} from 'react-native';
-import { Card, CardItem, Body, Button, Text, Container, Content, Form, Item, Input, Label, Picker, Right } from 'native-base';
+import { Card, CardItem, Body, Button, Text, Container, Content, Form, Item, Input, Label, Picker, Right, Left } from 'native-base';
 
 import '../data/cart';
 import '../data/kurir';
@@ -59,23 +59,33 @@ export default class PaymentScreen extends Component {
         return(
             <Container>
                 <Content padder>
-                        <Form>
+                    <View>
+                    <Card>
+                        <CardItem>
                             <Item floatingLabel>
                                 <Label>Nama Penerima</Label>
                                 <Input />
                             </Item>
+                        </CardItem>
+                        <CardItem>
                             <Item floatingLabel>
                                 <Label>Alamat</Label>
                                 <Input />
                             </Item>
+                        </CardItem>
+                        <CardItem>
                             <Item floatingLabel>
                                 <Label>Kode Pos</Label>
                                 <Input />
                             </Item>
+                        </CardItem>
+                        <CardItem>
                             <Item floatingLabel>
                                 <Label>No. HP</Label>
                                 <Input />
                             </Item>
+                        </CardItem>
+                        <CardItem>
                             <Item picker>
                                 <Text>Jasa Pengiriman :</Text>
                                 <Picker
@@ -86,23 +96,53 @@ export default class PaymentScreen extends Component {
                                    {this.arrayKurir()}
                                 </Picker>
                             </Item>
-                        </Form>
-                        <View>
-                            <Card>
-                                <CardItem>
+                        </CardItem>
+                    </Card>
+                    </View>
+                    <View>
+                        <Card>
+                            <CardItem>
+                                <Left>
+                                    <Text>Subtotal</Text>
+                                </Left>
                                 <Body>
-                                            <Text style={styles.font}>Subtotal : Rp {this.formatNumber(payment)}</Text>
-                                            <Text style={styles.font}>Shipping Cost : Rp {this.formatNumber(shippingcost)} </Text>
-                                            <Text style={styles.font}>Total : Rp {this.formatNumber(total)}</Text>
+                                    <Text>:</Text>
                                 </Body>
-                                </CardItem>
-                                <CardItem footer style={{alignContent: 'center'}}>
-                                    <Button style={{width: 90, alignItems: 'center'}} primary onPress={this.finish}>
-                                        <Text style={{color: '#fff', textAlign: 'center'}}>Selesai</Text>
-                                    </Button>
-                                </CardItem>
-                            </Card>
-                        </View>
+                                <Right>
+                                    <Text>Rp {this.formatNumber(payment)}</Text>
+                                </Right>
+                            </CardItem>
+
+                            <CardItem>
+                                <Left>
+                                    <Text>Shipping Cost</Text>
+                                </Left>
+                                <Body>
+                                    <Text>:</Text>
+                                </Body>
+                                <Right>
+                                    <Text>Rp {this.formatNumber(shippingcost)}</Text>
+                                </Right>
+                            </CardItem>
+
+                            <CardItem>
+                                <Left>
+                                    <Text>Total</Text>
+                                </Left>
+                                <Body>
+                                    <Text>:</Text>
+                                </Body>
+                                <Right>
+                                    <Text>Rp {this.formatNumber(total)}</Text>
+                                </Right>
+                            </CardItem>
+                            <CardItem footer style={{alignContent: 'center'}}>
+                                <Button style={{width: 90, alignItems: 'center'}} full primary onPress={this.finish}>
+                                    <Text style={{color: '#fff', textAlign: 'center'}}>Selesai</Text>
+                                </Button>
+                            </CardItem>
+                        </Card>
+                    </View>
                 </Content>
             </Container>
         )
