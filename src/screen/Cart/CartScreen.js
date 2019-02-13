@@ -29,7 +29,7 @@ export default class CartScreen extends Component {
     componentWillMount() {
         axios({
             method: 'get',
-            url: 'http://192.168.43.233:3333/api/v1/orders'
+            url: 'http://192.168.0.26:3333/api/v1/orders'
         })
         .then(res => {
             this.setState({
@@ -42,12 +42,16 @@ export default class CartScreen extends Component {
     }
 
     delCart = (id) => {
-        let prod = this.state.cart;
-        let index = cart.indexOf(id);
-        prod.splice(index, 1);
-        this.props.navigation.navigate('Cart', {
-            Refresh: () => this.refresh()
-        });
+
+        axios.delete(`http://192.168.0.26:3333/api/v1/order/${id}`)
+        .then(() => {
+            return axios.get(`http://192.168.0.26:3333/api/v1/orders`)
+        })
+        .then(res => {
+            const cart = res.data;
+            this.setState({ cart });
+        })
+        
     }
 
     quantityMinus = (qty, id) => () => {
@@ -85,9 +89,8 @@ export default class CartScreen extends Component {
     }
 
     render(){
-        let totalItem = this.state.cart.length;
+        let totalItem = 0;
         let totalPrice = 0;
-        this.state.cart.map(obj => (totalPrice = totalPrice + obj.subtotal));
 
         return(
             <Container>
@@ -102,7 +105,7 @@ export default class CartScreen extends Component {
                                     <View><Thumbnail square source={{ uri: item.product.image }} /></View>
                                     <View style={[styles.col, styles.colCenter]}>
                                         <View><Text style={{fontSize: 17}}>{item.product.name}</Text></View>
-                                        <View><Text style={{ color: 'grey' , fontSize: 15 }}>Rp.{item.price}</Text></View>
+                                        <View><Text style={{ color: 'grey' , fontSize: 15 }}>Rp. {this.formatNumber(item.price)}</Text></View>
                                     </View>
                                     <View style={[styles.col, styles.colCenter]}>
                                         <View style={styles.row}>
@@ -140,7 +143,7 @@ export default class CartScreen extends Component {
                 <CardItem>
                 <Body>
                     <Text>Total Item: {totalItem}</Text>
-                    <Text>Total: Rp {isNaN(parseInt(totalPrice)) ? 0 : parseInt(totalPrice)}</Text>
+                    <Text>Total: Rp {isNaN(parseInt(totalPrice)) ? 0 : this.formatNumber(parseInt(totalPrice))}</Text>
                 </Body>
                 </CardItem>
                 <CardItem footer>
@@ -151,9 +154,9 @@ export default class CartScreen extends Component {
                     </Button>
                     
                     <Button bordered small
-                    style={{ marginLeft : 8}}
+                    style={{ marginLeft : 8, fontSize: 12}}
                     onPress={()=> this.props.navigation.popToTop()}>
-                        <Text>Shop More</Text>
+                        <Text>Continue Shopping</Text>
                     </Button>
                 </CardItem>
                 </Card> }
