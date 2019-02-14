@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, ActivityIndicator} from 'react-native';
 import  {Container, Icon, Content} from 'native-base';
 import { Card, Button, Image } from 'react-native-elements';
 import axios from 'axios';
@@ -18,42 +18,22 @@ export default class DetailProduct extends React.Component {
     }
 
     componentDidMount() {
-        axios({
-            method: 'get',
-            url: `http://192.168.0.26:3333/api/v1/product/${this.item.id}`
-            })
-        .then(res => {
-            this.setState({
-                detail : res.data
-            })
-        })
-        .catch(err => {
-            console.log(err);
-        })
-
-        axios({
-            method: 'get',
-            url: 'http://192.168.0.26:3333/api/v1/orders'
-        })
-        .then(res =>  {
-            this.setState({
-                checkCarts : res.data
-            })
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        this.getDetail()
+        this.getCheckCart()
     }
 
     addToCart = () => {
 
         let exist = false
         let currentQty = 0
+        let checkCartId = 0
+        let currentPrice = 0
         this.state.checkCarts.map(data => {
             if (data.product_id == this.state.detail.id) {
                 checkCartId = data.id
                 exist = true
                 currentQty = data.qty
+                currentPrice = data.price
             }
         })
 
@@ -62,11 +42,13 @@ export default class DetailProduct extends React.Component {
                 method: 'patch',
                 url: `http://192.168.0.26:3333/api/v1/order/${checkCartId}`,
                 data: {
-                    qty: currentQty + 1
+                    qty: currentQty + 1,
+                    price: currentPrice + this.state.detail.price
                 }
             })
             .then(res =>  {
                 this.props.navigation.navigate("Cart");
+                this.getCheckCart()
             })
         }
         else {
@@ -81,8 +63,39 @@ export default class DetailProduct extends React.Component {
             })
             .then(res =>  {
                 this.props.navigation.navigate("Cart");
+                this.getCheckCart()
             })
         }
+    }
+
+    getDetail = () => {
+        axios({
+            method: 'get',
+            url: `http://192.168.0.26:3333/api/v1/product/${this.item.id}`
+            })
+        .then(res => {
+            this.setState({
+                detail : res.data
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
+    getCheckCart = () => {
+        axios({
+            method: 'get',
+            url: 'http://192.168.0.26:3333/api/v1/orders'
+        })
+        .then(res =>  {
+            this.setState({
+                checkCarts : res.data
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     formatNumber = (num) => {

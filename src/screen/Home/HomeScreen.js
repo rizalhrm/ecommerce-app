@@ -13,7 +13,7 @@ export default class HomeScreen extends React.Component {
           }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         axios({
             method: 'get',
             url: 'http://192.168.0.26:3333/api/v1/products'

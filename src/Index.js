@@ -8,8 +8,8 @@ import HomeScreen from './screen/Home/HomeScreen';
 import DetailProduct from './screen/Home/DetailProduct';
 import CartScreen from './screen/Cart/CartScreen';
 import ChatScreen from './screen/ChatScreen';
-import PaymentScreen from './screen/PaymentScreen';
-import InfoPayment from './screen/InfoPayment';
+import PaymentScreen from './screen/Payment/PaymentScreen';
+import InfoPayment from './screen/Payment/InfoPayment';
 
 state = {
     totalitemcart: []

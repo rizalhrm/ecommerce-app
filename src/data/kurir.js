@@ -1,4 +1,4 @@
-kurir= [
+Courier= [
     {
         id : 1,
         jasa : 'JNE',
@@ -15,4 +15,3 @@ kurir= [
         harga : 11000
     }
 ];
-returnKurir = []

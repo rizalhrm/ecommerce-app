@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TouchableOpacity, FlatList, StyleSheet} from 'react-native';
+import {TouchableWithoutFeedback, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import { View,
     Container,
     Content,
@@ -27,7 +27,7 @@ export default class CartScreen extends Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         axios({
             method: 'get',
             url: 'http://192.168.0.26:3333/api/v1/orders'
@@ -151,11 +151,11 @@ export default class CartScreen extends Component {
                                                 </TouchableOpacity>
                                             </View>
                                             <View style={{alignItems : 'center'}}>
-                                                <TouchableOpacity onPress={() => this.delCart(item.id)}>
+                                                <TouchableWithoutFeedback onPress={() => this.delCart(item.id)}>
                                                     <View>
                                                         <Icon name="trash" style={{color: '#ff0a0a', fontSize : 20, marginTop: 5}}/>
                                                     </View>
-                                                </TouchableOpacity>
+                                                </TouchableWithoutFeedback>
                                             </View>
                                         </View>
                                     </View>
@@ -177,16 +177,15 @@ export default class CartScreen extends Component {
                 </Body>
                 </CardItem>
                 <CardItem footer>
-                    <Button small style={{padding : 5}} onPress={() => {
+                    <Button bordered small
+                    style={{ fontSize: 12}}
+                    onPress={()=> this.props.navigation.popToTop()}>
+                        <Text>Continue Shopping</Text>
+                    </Button>
+                    <Button small style={{marginLeft : 8, padding : 5}} onPress={() => {
                         this.props.navigation.navigate('Payment', {totalPrice});
                     }}>
                         <Text>CheckOut</Text>
-                    </Button>
-                    
-                    <Button bordered small
-                    style={{ marginLeft : 8, fontSize: 12}}
-                    onPress={()=> this.props.navigation.popToTop()}>
-                        <Text>Continue Shopping</Text>
                     </Button>
                 </CardItem>
                 </Card> }
