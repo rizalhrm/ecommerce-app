@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TouchableWithoutFeedback, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
+import {TouchableWithoutFeedback, TouchableOpacity, FlatList, StyleSheet, Alert} from 'react-native';
 import { View,
     Container,
     Content,
@@ -42,17 +42,28 @@ export default class CartScreen extends Component {
         })
     }
 
-    delCart = (id) => {
-
-        axios.delete(`http://192.168.0.26:3333/api/v1/order/${id}`)
-        .then(() => {
-            return axios.get(`http://192.168.0.26:3333/api/v1/orders`)
-        })
-        .then(res => {
-            const cart = res.data;
-            this.setState({ cart });
-        })
-        
+    delCart = (id, name) => {
+        Alert.alert(
+            "Delete Product",
+            "Are you sure you deleted this product (" + name + ") ?",
+            [
+                { text: "No" },
+                {
+                    text: "Yes",
+                    style: "cancel",
+                    onPress: () => {
+                        axios.delete(`http://192.168.0.26:3333/api/v1/order/${id}`)
+                        .then(() => {
+                            return axios.get(`http://192.168.0.26:3333/api/v1/orders`)
+                        })
+                        .then(res => {
+                            const cart = res.data;
+                            this.setState({ cart });
+                        })
+                    }
+                }
+            ]
+        )
     }
 
     quantityMinus = (qty, id, price) => () => {
@@ -140,18 +151,18 @@ export default class CartScreen extends Component {
                                     <View style={[styles.col, styles.colCenter]}>
                                         <View style={styles.row}>
                                             <View style={styles.dempet}>
-                                                <TouchableOpacity style={{backgroundColor: '#c3c3c3', borderRadius: 19, width: 25, height: 25, alignItems: 'center', justifyCenter: 'center', marginLeft : 20, alignContent: 'center' }} onPress={this.quantityMinus(item.qty, item.id, item.product.price)}>
+                                                <TouchableOpacity style={styles.quantitystyling} onPress={this.quantityMinus(item.qty, item.id, item.product.price)}>
                                                     <Icon style={{ color: '#fff', fontSize: 17, top: 4}} name="remove" />
                                                 </TouchableOpacity>
                                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                     <Text>{item.qty}</Text>
                                                 </View>
-                                                <TouchableOpacity style={{backgroundColor: '#c3c3c3', borderRadius: 19, width: 25, height: 25, alignItems: 'center', justifyCenter: 'center', marginRight : 20, alignContent: 'center'}} onPress={this.quantityPlus(item.qty, item.id, item.product.price)}>
+                                                <TouchableOpacity style={styles.quantitystylingvv} onPress={this.quantityPlus(item.qty, item.id, item.product.price)}>
                                                     <Icon style={{ color: '#fff', fontSize: 17, top: 4}} name="add" />
                                                 </TouchableOpacity>
                                             </View>
                                             <View style={{alignItems : 'center'}}>
-                                                <TouchableWithoutFeedback onPress={() => this.delCart(item.id)}>
+                                                <TouchableWithoutFeedback onPress={() => this.delCart(item.id, item.product.name)}>
                                                     <View>
                                                         <Icon name="trash" style={{color: '#ff0a0a', fontSize : 20, marginTop: 5}}/>
                                                     </View>
@@ -216,5 +227,23 @@ const styles = StyleSheet.create({
     row: {
         flex: 1,
         flexDirection: 'column'
+    },
+    quantitystyling: {
+        backgroundColor: '#c3c3c3',
+        borderRadius: 19,
+        width: 25,
+        height: 25,
+        alignItems: 'center',
+        marginLeft : 20,
+        alignContent: 'center' 
+    },
+    quantitystylingvv: {
+        backgroundColor: '#c3c3c3',
+        borderRadius: 19,
+        width: 25,
+        height: 25,
+        alignItems: 'center',
+        marginRight : 20,
+        alignContent: 'center'
     }
 })

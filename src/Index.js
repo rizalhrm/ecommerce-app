@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {createAppContainer, createStackNavigator, createBottomTabNavigator} from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Text, Icon} from 'native-base';
@@ -10,10 +10,7 @@ import CartScreen from './screen/Cart/CartScreen';
 import ChatScreen from './screen/ChatScreen';
 import PaymentScreen from './screen/Payment/PaymentScreen';
 import InfoPayment from './screen/Payment/InfoPayment';
-
-state = {
-    totalitemcart: []
-}
+import CartCounter from './CartCounter';
 
 const HomeStack = createStackNavigator({
     Home: {
@@ -25,15 +22,15 @@ const HomeStack = createStackNavigator({
         },
         headerTintColor: '#fff',
         headerRight: (
-            <View style={{padding: 5}}>
-            <View style={{position: 'absolute', height: 20, width: 20, borderRadius: 10, backgroundColor: 'rgba(95, 197, 123, 0.8)', right: 15, bottom: 20, marginRight: 10, alignItems: 'center', justifyContent: 'center', zIndex: 2000}}>
-            <Text style={{ color: 'white', fontWeight: 'bold' }}>{this.state.totalitemcart.length}</Text>
-            </View>
-                <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
-                    <Icon style={{color: 'white', marginRight: 10, alignItems: 'center', alignContent: 'center', alignSelf: 'center'}} name='cart'/>
-                </TouchableOpacity>
-            </View>
-        )
+                <View style={{padding: 5}}>
+                <View style={styles.badge}>
+                    <CartCounter />
+                </View>
+                    <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+                        <Icon style={styles.myicon} name='cart'/>
+                    </TouchableOpacity>
+                </View>
+            )
       })
     },
     DetailProduct: {
@@ -46,11 +43,11 @@ const HomeStack = createStackNavigator({
             headerTintColor: '#fff',
             headerRight: (
                 <View style={{padding: 5}}>
-                <View style={{position: 'absolute', height: 20, width: 20, borderRadius: 10, backgroundColor: 'rgba(95, 197, 123, 0.8)', right: 15, bottom: 20, marginRight: 10, alignItems: 'center', justifyContent: 'center', zIndex: 2000}}>
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>{this.state.totalitemcart.length}</Text>
+                <View style={styles.badge}>
+                    <CartCounter />
                 </View>
                     <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
-                        <Icon style={{color: 'white', marginRight: 10, alignItems: 'center', alignContent: 'center', alignSelf: 'center'}} name='cart'/>
+                        <Icon style={styles.myicon} name='cart'/>
                     </TouchableOpacity>
                 </View>
             )
@@ -76,11 +73,11 @@ const HomeStack = createStackNavigator({
             headerTintColor: '#fff',
             headerRight: (
                 <View style={{padding: 5}}>
-                <View style={{position: 'absolute', height: 20, width: 20, borderRadius: 10, backgroundColor: 'rgba(95, 197, 123, 0.8)', right: 15, bottom: 20, marginRight: 10, alignItems: 'center', justifyContent: 'center', zIndex: 2000}}>
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>{this.state.totalitemcart.length}</Text>
+                <View style={styles.badge}>
+                    <CartCounter />
                 </View>
                     <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
-                        <Icon style={{color: 'white', marginRight: 10, alignItems: 'center', alignContent: 'center', alignSelf: 'center'}} name='cart'/>
+                        <Icon style={styles.myicon} name='cart'/>
                     </TouchableOpacity>
                 </View>
             )
@@ -88,7 +85,7 @@ const HomeStack = createStackNavigator({
     },
     InfoPayment: {
         screen: InfoPayment,
-        navigationOptions: () => ({
+        navigationOptions: ({navigation}) => ({
             title: "Info Payment",
             headerStyle: {
                 backgroundColor: '#3f48cc',
@@ -151,5 +148,28 @@ const MainStack = createAppContainer(
         }
     )
 );
+
+const styles = StyleSheet.create({
+    badge : {
+        position: 'absolute',
+        height: 20,
+        width: 20,
+        borderRadius: 10,
+        backgroundColor: 'rgba(95, 197, 123, 0.8)',
+        right: 15,
+        bottom: 20,
+        marginRight: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 2000
+    },
+    myicon : {
+        color: 'white',
+        marginRight: 10,
+        alignItems: 'center',
+        alignContent: 'center',
+        alignSelf: 'center'
+    }
+})
 
 export default MainStack;

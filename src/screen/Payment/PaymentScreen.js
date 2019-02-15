@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
-import { Card, CardItem, Body, Button, Text, Container, Content, Form, Item, Input, Label, Picker, Right, Left } from 'native-base';
+import {View} from 'react-native';
+import { Card, CardItem, Body, Button, Text, Container, Content, Item, Input, Label, Picker, Right, Left } from 'native-base';
 import axios from 'axios';
 
 import '../../data/kurir';
-import '../../data/bank';
 
 export default class PaymentScreen extends Component {
 
@@ -14,7 +13,7 @@ export default class PaymentScreen extends Component {
             Couriers : Courier,
             chosenCourier : '0',
             indexCourier : '',
-            bank : bank,
+            bank : [],
             chosenBank : '0',
             indexBank : '',
             name : "",
@@ -35,7 +34,7 @@ export default class PaymentScreen extends Component {
             let banks = [<Picker.Item key='0' label='Silahkan Pilih Bank' value='0'/>];
             this.state.bank.forEach((item) => {
                 banks.push(
-                    <Picker.Item key={item.id} label={item.nameofbank} value={item.code}/>
+                    <Picker.Item key={item.id} label={item.name} value={item.code}/>
                 );
             })
             return banks
@@ -46,19 +45,34 @@ export default class PaymentScreen extends Component {
         return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
 
-    finish = (total, mybank) => {
+    finish = (total, idbank) => {
 
         axios({
             method: 'get',
             url: 'http://192.168.0.26:3333/api/v1/orders/destroy'
         })
         .then(res => {
-            this.props.navigation.navigate('InfoPayment', {'total' : total})
+            this.props.navigation.navigate('InfoPayment', {'total' : total, 'idbank' : idbank})
         })
         .catch(err => {
             console.log(err);
         })
 
+    }
+
+    componentDidMount() {
+        axios({
+            method: 'get',
+            url: 'http://192.168.0.26:3333/api/v1/banks'
+        })
+        .then(res => {
+            this.setState({
+                bank: res.data
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     validation = () => {
@@ -86,6 +100,7 @@ export default class PaymentScreen extends Component {
         const payment = navigation.getParam("totalPrice");
         let shippingcost = this.state.chosenCourier;
         let mybank = this.state.chosenBank;
+        let idbank = this.state.indexBank;
         let total = parseInt(payment) + parseInt(shippingcost) + parseInt(mybank);
         return(
             <Container>
@@ -186,7 +201,7 @@ export default class PaymentScreen extends Component {
                                     {
                                         isValid && this.state.chosenCourier != '0' && this.state.chosenBank != '0' ?
                                         (
-                                            <Button style={{width: 90, alignItems: 'center'}} full primary onPress={() => this.finish(total)}>
+                                            <Button style={{width: 90, alignItems: 'center'}} full primary onPress={() => this.finish(total, idbank)}>
                                             <Text style={{color: '#fff', textAlign: 'center'}}>Finish</Text>
                                             </Button>
                                         ):
@@ -206,9 +221,3 @@ export default class PaymentScreen extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    font: {
-        fontSize: 15
-    }
-})
