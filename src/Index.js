@@ -23,9 +23,9 @@ const HomeStack = createStackNavigator({
         headerTintColor: '#fff',
         headerRight: (
                 <View style={{padding: 5}}>
-                <View style={styles.badge}>
-                    <CartCounter />
-                </View>
+                    <View style={styles.badge}>
+                        <CartCounter />
+                    </View>
                     <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                         <Icon style={styles.myicon} name='cart'/>
                     </TouchableOpacity>
@@ -43,9 +43,9 @@ const HomeStack = createStackNavigator({
             headerTintColor: '#fff',
             headerRight: (
                 <View style={{padding: 5}}>
-                <View style={styles.badge}>
-                    <CartCounter />
-                </View>
+                    <View style={styles.badge}>
+                        <CartCounter />
+                    </View>
                     <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                         <Icon style={styles.myicon} name='cart'/>
                     </TouchableOpacity>
@@ -73,9 +73,9 @@ const HomeStack = createStackNavigator({
             headerTintColor: '#fff',
             headerRight: (
                 <View style={{padding: 5}}>
-                <View style={styles.badge}>
-                    <CartCounter />
-                </View>
+                    <View style={styles.badge}>
+                        <CartCounter />
+                    </View>
                     <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                         <Icon style={styles.myicon} name='cart'/>
                     </TouchableOpacity>

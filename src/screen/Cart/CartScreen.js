@@ -45,7 +45,7 @@ export default class CartScreen extends Component {
     delCart = (id, name) => {
         Alert.alert(
             "Delete Product",
-            "Are you sure you deleted this product (" + name + ") ?",
+            "Are you sure you deleted the product (" + name + ") ?",
             [
                 { text: "No" },
                 {
