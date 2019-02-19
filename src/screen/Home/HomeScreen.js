@@ -1,35 +1,27 @@
 import React from 'react';
-import {Image, StyleSheet, FlatList} from 'react-native';
-import {View, Text, Container, Content, Left, Right, List, ListItem, Button, Thumbnail, Body} from 'native-base';
+import { Image, StyleSheet, FlatList, View } from 'react-native';
+import { Container, Content, Text, Left, Right, List, ListItem, Button, Thumbnail, Body} from 'native-base';
 import Swiper from 'react-native-swiper';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { getProducts, saveProductDetail } from '../../public/redux/actions/products';
 
-export default class HomeScreen extends React.Component {
-
-    constructor(){
-        super();
-        this.state = {
-            data: []
-          }
-    }
+class HomeScreen extends React.Component {
 
     componentDidMount() {
-        axios({
-            method: 'get',
-            url: 'http://192.168.0.26:3333/api/v1/products'
-        })
-        .then(res => {
-            this.setState({
-                data: res.data
-            })
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        this.getData();
     }
-    
+
+    getData = () => {
+        this.props.dispatch(getProducts());
+    }
+
     formatNumber = (num) => {
         return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+
+    handleNavigateDetail (item) {
+        this.props.dispatch(saveProductDetail(item))
+        this.props.navigation.navigate('DetailProduct')
     }
 
     _keyExtractor = (item, index) => item.id.toString();
@@ -37,7 +29,7 @@ export default class HomeScreen extends React.Component {
     renderItem = ({ item, index }) => (
         <ListItem 
         thumbnail
-        onPress={() => this.props.navigation.navigate('DetailProduct', {item})}
+        onPress={()=> this.handleNavigateDetail(item.id)}
         >
             <Left>
                 <Thumbnail square source={{ uri: item.image }} />
@@ -47,29 +39,29 @@ export default class HomeScreen extends React.Component {
                 <Text style={{color: 'black', fontSize: 13}}>Rp {this.formatNumber(item.price)}</Text>
             </Body>
             <Right>
-                <Button style={{height: 25}} primary onPress={() => this.props.navigation.navigate('DetailProduct', {item})}>
+                <Button style={{height: 25}} primary onPress={()=> this.handleNavigateDetail(item.id)}>
                     <Text>View</Text>
                 </Button>
             </Right>
         </ListItem>
     )
     
-
     render(){
+        console.log(this.props.products)
         return (
         <Container>
             <Content>
                 <Swiper style={styles.wrapper} showsButtons={true} paginationStyle={{position:'absolute', top:250, right: 10, bottom: 15}} activeDotColor="#dd0057" autoplay={true}>
                     <View style={styles.slide}>
-                        <Image style={{width:"50%", height:200, alignItems: 'center'}} source={{uri : "https://bit.ly/2GdJQRj"}} />
-                        <Text style={styles.bestSeller}>Xiaomi 6A</Text>
+                        <Image style={{width:"50%", height:200, alignItems: 'center'}} source={{uri : "https://www.t-mobile.com/content/dam/t-mobile/en-p/cell-phones/apple/apple-iphone-x/silver/Apple-iPhoneX-Silver-1-3x.jpg"}} />
+                        <Text style={styles.bestSeller}>iPhone X</Text>
                     </View>
                     <View style={styles.slide}>
-                        <Image style={{width:"50%", height:200, alignItems: 'center'}} source={{uri : "http://udah.pw/KgvcZ"}} />
+                        <Image style={{width:"50%", height:200, alignItems: 'center'}} source={{uri : "https://www.hargahpsamsung.com/wp-content/uploads/2018/02/Samsung-Galaxy-A8-Plus-.jpg"}} />
                         <Text style={styles.bestSeller}>Samsung Galaxy A8 Plus</Text>
                     </View>
                     <View style={styles.slide}>
-                        <Image style={{width:"50%", height:200, alignItems: 'center'}} source={{uri : "https://bit.ly/2TyOjRF"}} />
+                        <Image style={{width:"50%", height:200, alignItems: 'center'}} source={{uri : "https://www.planetofmobile.com/wp-content/uploads/2018/09/044-1-600x600.jpg"}} />
                         <Text style={styles.bestSeller}>Vivo V11 Pro</Text>
                     </View>
                 </Swiper>
@@ -80,22 +72,31 @@ export default class HomeScreen extends React.Component {
                                 Products List
                         </Text>
                 </View>
-                <View>
+                <View style={{flex: 1}}>
                     <List>
                         <FlatList
-                            data={this.state.data}
-                            keyExtractor={this._keyExtractor}
+                            data={this.props.products.results.data}
                             renderItem={this.renderItem}
+                            keyExtractor={this._keyExtractor}
+                            refreshing={this.props.products.isLoading}
+                            onRefresh={this.getData}
                         />
                     </List>
                 </View>
-
-
+            
             </Content>
         </Container>
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+      products: state.products
+    }
+  }
+
+export default connect(mapStateToProps)(HomeScreen)
 
 const styles = StyleSheet.create({
     wrapper: {

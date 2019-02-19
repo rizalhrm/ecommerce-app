@@ -1,35 +1,34 @@
 import React from 'react';
-import {View, Text, ActivityIndicator} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import  {Container, Icon, Content} from 'native-base';
 import { Card, Button, Image } from 'react-native-elements';
-import axios from 'axios';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { connect } from 'react-redux';
+import { saveProductDetail } from '../../public/redux/actions/products';
+import { getCarts, checkCart, addToCart } from '../../public/redux/actions/carts';
 
-export default class DetailProduct extends React.Component {
-
-    constructor(props){
-        super(props);
-
-        this.item = this.props.navigation.state.params.item;
-
-        this.state = {
-            checkCarts : [],
-            detail : []
-        }
-    }
+class DetailProduct extends React.Component {
 
     componentDidMount() {
-        this.getDetail()
-        this.getCheckCart()
+        this.getDetail();
+        this.getCart()
+    }
+
+    getDetail = () => {
+        this.props.dispatch(saveProductDetail());
+    }
+
+    getCart = () => {
+        this.props.dispatch(getCarts());
     }
 
     addToCart = () => {
-
         let exist = false
         let currentQty = 0
         let checkCartId = 0
         let currentPrice = 0
-        this.state.checkCarts.map(data => {
-            if (data.product_id == this.state.detail.id) {
+        this.props.carts.carts.data.map(data => {
+            if (data.product_id == this.props.products.productDetails.id) {
                 checkCartId = data.id
                 exist = true
                 currentQty = data.qty
@@ -38,64 +37,16 @@ export default class DetailProduct extends React.Component {
         })
 
         if (exist) {
-            axios({
-                method: 'patch',
-                url: `http://192.168.0.26:3333/api/v1/order/${checkCartId}`,
-                data: {
-                    qty: currentQty + 1,
-                    price: currentPrice + this.state.detail.price
-                }
-            })
-            .then(res =>  {
-                this.props.navigation.navigate("Cart");
-                this.getCheckCart()
-            })
+            this.props.dispatch(checkCart(checkCartId, currentQty, currentPrice, this.props.products.productDetails.price))
+            this.getCart()
+            this.props.navigation.navigate("Cart");
         }
         else {
-            axios({
-                method: 'post',
-                url: 'http://192.168.0.26:3333/api/v1/order',
-                data: {
-                    product_id: this.item.id,
-                    price: this.state.detail.price,
-                    qty: 1
-                }
-            })
-            .then(res =>  {
-                this.props.navigation.navigate("Cart");
-                this.getCheckCart()
-            })
+            this.props.dispatch(addToCart(this.props.products.productDetails.id, this.props.products.productDetails.price))
+            this.getCart()
+            this.props.navigation.navigate("Cart");
         }
-    }
 
-    getDetail = () => {
-        axios({
-            method: 'get',
-            url: `http://192.168.0.26:3333/api/v1/product/${this.item.id}`
-            })
-        .then(res => {
-            this.setState({
-                detail : res.data
-            })
-        })
-        .catch(err => {
-            console.log(err);
-        })
-    }
-
-    getCheckCart = () => {
-        axios({
-            method: 'get',
-            url: 'http://192.168.0.26:3333/api/v1/orders'
-        })
-        .then(res =>  {
-            this.setState({
-                checkCarts : res.data
-            })
-        })
-        .catch(err => {
-            console.log(err);
-        })
     }
 
     formatNumber = (num) => {
@@ -103,22 +54,28 @@ export default class DetailProduct extends React.Component {
     }
     
     render(){
+        console.log(this.props.carts.carts.data)
         return (
         <Container>
             <Content>
+            <Spinner
+                    visible={this.props.products.isLoading}
+                    textContent={'Loading...'}
+                    textStyle={styles.spinnerTextStyle}
+                    />
                 <Card
-                title={this.state.detail.name} titleStyle={{fontSize: 18}}>
+                title={this.props.products.productDetails.name} titleStyle={{fontSize: 18}}>
                 <Image
-                source={{ uri: this.state.detail.image }}
-                style={{ width: 300, height:300, alignContent: 'center', resizeMode:'contain', marginBottom: 5 }}
+                source={{ uri: this.props.products.productDetails.image }}
+                style={{ width: 300, height:300, alignItems: "center", alignSelf: "center", resizeMode:'contain', marginBottom: 5 }}
                 />
                 <View style={{flex: 1}}>
                     <Text style={{color: 'black', marginBottom: 10, fontSize:16, justifyContent: 'space-between', textAlign:"center"}}>
-                    Rp {this.formatNumber(parseInt(this.state.detail.price))}
+                    Rp {this.formatNumber(parseInt(this.props.products.productDetails.price))}
                     </Text>
                     <Text style={{fontWeight: 'bold' , color: 'black'}}>Description : </Text>
                     <Text style={{color: 'black', marginBottom: 10, fontSize:13, alignSelf:"stretch", justifyContent:"center"}}>
-                    {this.state.detail.description}
+                    {this.props.products.productDetails.description}
                     </Text>
                     <Button
                     icon={<Icon name='cart' style={{color: 'white'}}/>}
@@ -132,3 +89,19 @@ export default class DetailProduct extends React.Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+      products: state.productDetails,
+      carts: state.carts,
+      checkCart: state.checkCart
+    }
+  }
+
+export default connect(mapStateToProps)(DetailProduct)
+
+const styles = StyleSheet.create({
+    spinnerTextStyle: {
+        color: '#fff'
+    }
+})

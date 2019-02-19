@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {createAppContainer, createStackNavigator, createBottomTabNavigator} from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Text, Icon} from 'native-base';
+import {Icon} from 'native-base';
+import { Provider } from 'react-redux';
 
 import HomeScreen from './screen/Home/HomeScreen';
 import DetailProduct from './screen/Home/DetailProduct';
@@ -11,6 +12,7 @@ import ChatScreen from './screen/ChatScreen';
 import PaymentScreen from './screen/Payment/PaymentScreen';
 import InfoPayment from './screen/Payment/InfoPayment';
 import CartCounter from './CartCounter';
+import store from './public/redux/store';
 
 const HomeStack = createStackNavigator({
     Home: {
@@ -23,9 +25,7 @@ const HomeStack = createStackNavigator({
         headerTintColor: '#fff',
         headerRight: (
                 <View style={{padding: 5}}>
-                    <View style={styles.badge}>
-                        <CartCounter />
-                    </View>
+                    <CartCounter />
                     <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                         <Icon style={styles.myicon} name='cart'/>
                     </TouchableOpacity>
@@ -43,9 +43,7 @@ const HomeStack = createStackNavigator({
             headerTintColor: '#fff',
             headerRight: (
                 <View style={{padding: 5}}>
-                    <View style={styles.badge}>
-                        <CartCounter />
-                    </View>
+                    <CartCounter />
                     <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                         <Icon style={styles.myicon} name='cart'/>
                     </TouchableOpacity>
@@ -73,9 +71,7 @@ const HomeStack = createStackNavigator({
             headerTintColor: '#fff',
             headerRight: (
                 <View style={{padding: 5}}>
-                    <View style={styles.badge}>
-                        <CartCounter />
-                    </View>
+                    <CartCounter />
                     <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                         <Icon style={styles.myicon} name='cart'/>
                     </TouchableOpacity>
@@ -150,19 +146,6 @@ const MainStack = createAppContainer(
 );
 
 const styles = StyleSheet.create({
-    badge : {
-        position: 'absolute',
-        height: 20,
-        width: 20,
-        borderRadius: 10,
-        backgroundColor: 'rgba(95, 197, 123, 0.8)',
-        right: 15,
-        bottom: 20,
-        marginRight: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 2000
-    },
     myicon : {
         color: 'white',
         marginRight: 10,
@@ -172,4 +155,12 @@ const styles = StyleSheet.create({
     }
 })
 
-export default MainStack;
+export default class Root extends React.Component {
+    render() {
+      return (
+        <Provider store={store}>
+          <MainStack />
+        </Provider>
+      )
+    }
+  }

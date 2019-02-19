@@ -12,34 +12,29 @@ import { View,
     Footer,
     CardItem, Card
 } from 'native-base';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { connect } from 'react-redux';
+import { getCarts, decreaseQty, increaseQty, deleteCart } from '../../public/redux/actions/carts';
 import axios from 'axios';
 
 import ToShop from './components/ToShop';
 
-export default class CartScreen extends Component {
+class CartScreen extends Component {
 
     constructor(){
         super();
         this.state = {
-            cart : [],
             product : [],
             price : 0
         }
     }
 
     componentDidMount() {
-        axios({
-            method: 'get',
-            url: 'http://192.168.0.26:3333/api/v1/orders'
-        })
-        .then(res => {
-            this.setState({
-                cart: res.data
-            })
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        this.getCart();
+    }
+
+    getCart = () => {
+        this.props.dispatch(getCarts());
     }
 
     delCart = (id, name) => {
@@ -51,22 +46,18 @@ export default class CartScreen extends Component {
                 {
                     text: "Yes",
                     style: "cancel",
-                    onPress: () => {
-                        axios.delete(`http://192.168.0.26:3333/api/v1/order/${id}`)
-                        .then(() => {
-                            return axios.get(`http://192.168.0.26:3333/api/v1/orders`)
-                        })
-                        .then(res => {
-                            const cart = res.data;
-                            this.setState({ cart });
-                        })
+                    onPress: async () => {
+                        const del = await this.props.dispatch(deleteCart(id));
+                        if (del) {
+                            this.getCart();
+                        }
                     }
                 }
             ]
         )
     }
 
-    quantityMinus = (qty, id, price) => () => {
+    decreaseQty = (qty, id, price) => () => {
 
         if (qty === 1) {
             return false;
@@ -97,7 +88,7 @@ export default class CartScreen extends Component {
           }
     };
 
-    quantityPlus = (qty, id, price) => () => {
+    increaseQty = (qty, id, price) => () => {
 
         axios({
             method: 'patch',
@@ -129,15 +120,19 @@ export default class CartScreen extends Component {
     }
 
     render(){
-        let totalItem = this.state.cart.length;
+        console.log(this.props.carts.carts.data)
+        let totalItem = 0;
         let totalPrice = 0;
-        this.state.cart.map(obj => (totalPrice = totalPrice + obj.price));
-
         return(
             <Container>
                 <Content>
+                <Spinner
+                    visible={this.props.carts.isLoading}
+                    textContent={'Loading...'}
+                    textStyle={styles.spinnerTextStyle}
+                    />
                     <FlatList
-                        data={this.state.cart}
+                        data={this.props.carts.carts.data}
                         renderItem={({ item, index }) => (
                         <Card>
                             <CardItem>
@@ -146,18 +141,18 @@ export default class CartScreen extends Component {
                                     <View><Thumbnail square source={{ uri: item.product.image }} /></View>
                                     <View style={[styles.col, styles.colCenter]}>
                                         <View><Text style={{fontSize: 17}}>{item.product.name}</Text></View>
-                                        <View><Text style={{ color: 'grey' , fontSize: 15 }}>Rp. {this.formatNumber(item.product.price)}</Text></View>
+                                        <View><Text style={{ color: 'black' , fontSize: 14 }}>Rp. {this.formatNumber(item.product.price)}</Text></View>
                                     </View>
                                     <View style={[styles.col, styles.colCenter]}>
                                         <View style={styles.row}>
                                             <View style={styles.dempet}>
-                                                <TouchableOpacity style={styles.quantitystyling} onPress={this.quantityMinus(item.qty, item.id, item.product.price)}>
+                                                <TouchableOpacity style={styles.quantitystyling} onPress={this.decreaseQty(item.qty, item.id, item.product.price)}>
                                                     <Icon style={{ color: '#fff', fontSize: 17, top: 4}} name="remove" />
                                                 </TouchableOpacity>
                                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                     <Text>{item.qty}</Text>
                                                 </View>
-                                                <TouchableOpacity style={styles.quantitystylingvv} onPress={this.quantityPlus(item.qty, item.id, item.product.price)}>
+                                                <TouchableOpacity style={styles.quantitystylingvv} onPress={this.increaseQty(item.qty, item.id, item.product.price)}>
                                                     <Icon style={{ color: '#fff', fontSize: 17, top: 4}} name="add" />
                                                 </TouchableOpacity>
                                             </View>
@@ -180,7 +175,7 @@ export default class CartScreen extends Component {
                     
                 </Content>
                 <Footer style={{ marginTop: 80, backgroundColor :  'transparent'}}>
-                    {this.state.cart.length < 1 ? <ToShop/> : <Card style={{position : 'absolute' , bottom : 10}}>
+                    {this.props.carts.carts.length < 1 ? <ToShop/> : <Card style={{position : 'absolute' , bottom : 10}}>
                 <CardItem>
                 <Body>
                     <Text>Total Item: {totalItem}</Text>
@@ -206,7 +201,18 @@ export default class CartScreen extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+      carts: state.carts
+    }
+  }
+
+export default connect(mapStateToProps)(CartScreen)
+
 const styles = StyleSheet.create({
+    spinnerTextStyle: {
+        color: '#fff'
+    },
     container: {
         flex: 1,
         flexDirection: 'row'

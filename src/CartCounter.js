@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import axios from 'axios';
 
 class CartCounter extends React.Component {
@@ -26,14 +26,35 @@ class CartCounter extends React.Component {
         })
     }
 
+
+
     render(){
-        console.log(this.state.countOfCart.length)
+        
         return (
-            <Text style={{ color: 'white', fontWeight: 'bold', fontSize : 15 }}>
-                {this.state.countOfCart.length === 0 ? 0 : this.state.countOfCart.length }
-            </Text>
+            this.state.countOfCart.length === 0 ? null : (<View style={styles.badge}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize : 15 }}>
+                            {this.state.countOfCart.length}
+                        </Text>
+                    </View>)
+            
         )
     }
 }
+
+const styles = StyleSheet.create({
+    badge : {
+        position: 'absolute',
+        height: 20,
+        width: 20,
+        borderRadius: 10,
+        backgroundColor: 'rgba(95, 197, 123, 0.8)',
+        right: 15,
+        bottom: 20,
+        marginRight: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 2000
+    }
+})
 
 export default CartCounter;

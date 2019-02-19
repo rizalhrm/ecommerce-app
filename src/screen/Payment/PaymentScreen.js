@@ -3,14 +3,12 @@ import {View} from 'react-native';
 import { Card, CardItem, Body, Button, Text, Container, Content, Item, Input, Label, Picker, Right, Left } from 'native-base';
 import axios from 'axios';
 
-import '../../data/kurir';
-
 export default class PaymentScreen extends Component {
 
     constructor(){
         super();
         this.state = {
-            Couriers : Courier,
+            Couriers : [],
             chosenCourier : '0',
             indexCourier : '',
             bank : [],
@@ -25,7 +23,7 @@ export default class PaymentScreen extends Component {
             let items = [<Picker.Item key='0' label='Silahkan Pilih Kurir' value='0'/>];
             this.state.Couriers.forEach((item) => {
                 items.push(
-                    <Picker.Item key={item.id} label={item.jasa} value={item.harga}/>
+                    <Picker.Item key={item.id} label={item.name} value={item.price}/>
                 );
             })
             return items
@@ -68,6 +66,19 @@ export default class PaymentScreen extends Component {
         .then(res => {
             this.setState({
                 bank: res.data
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
+        axios({
+            method: 'get',
+            url: 'http://192.168.0.26:3333/api/v1/couriers'
+        })
+        .then(res => {
+            this.setState({
+                Couriers: res.data
             })
         })
         .catch(err => {
