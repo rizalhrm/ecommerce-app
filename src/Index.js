@@ -14,24 +14,60 @@ import InfoPayment from './screen/Payment/InfoPayment';
 import CartCounter from './CartCounter';
 import store from './public/redux/store';
 
-const HomeStack = createStackNavigator({
+const StackNavigator = createStackNavigator({
     Home: {
-      screen: HomeScreen,
-      navigationOptions: ({navigation}) => ({
-        title: "Zona Gadget",
-        headerStyle: {
-            backgroundColor: '#3f48cc'
+        screen: createBottomTabNavigator({
+            Home: {
+                screen: HomeScreen,
+                navigationOptions: {
+                    title: "Home"
+                }
+            },
+            Chat: {
+                screen: ChatScreen,
+                navigationOptions: {
+                    title: "Chat"
+                }
+            }
         },
-        headerTintColor: '#fff',
-        headerRight: (
-                <View style={{padding: 5}}>
-                    <CartCounter />
-                    <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
-                        <Icon style={styles.myicon} name='cart'/>
-                    </TouchableOpacity>
-                </View>
-            )
-      })
+        {
+            defaultNavigationOptions: ({ navigation }) =>  ({
+                tabBarIcon: ({ focused, tintColor }) => {
+                    const { routeName } = navigation.state;
+                    let iconName;
+                    if (routeName === "Home") {
+                        iconName = 'ios-home';
+                    }
+                    else if (routeName === "Chat") {
+                        iconName = 'ios-chatbubbles';
+                    }
+                    return <Ionicons name={iconName} size={25} color={tintColor} />;
+                }
+            }),
+            initialRouteName: 'Home',
+            tabBarOptions: {
+                activeTintColor: "#3f48cc",
+                inactiveTintColor: "#787fec",
+                labelStyle: {
+                    fontSize: 12,
+                }
+            }
+        }),
+        navigationOptions: ({navigation}) => ({
+            title: "Zona Gadget",
+            headerStyle: {
+                backgroundColor: '#3f48cc'
+            },
+            headerTintColor: '#fff',
+            headerRight: (
+                    <View style={{padding: 5}}>
+                        <CartCounter />
+                        <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+                            <Icon style={styles.myicon} name='cart'/>
+                        </TouchableOpacity>
+                    </View>
+                )
+          })
     },
     DetailProduct: {
         screen: DetailProduct,
@@ -104,46 +140,7 @@ const ChatStack = createStackNavigator({
     }
 })
 
-const MainStack = createAppContainer(
-    createBottomTabNavigator(
-        {
-            Home: {
-                screen: HomeStack,
-                navigationOptions: {
-                    title: "Home"
-                }
-            },
-            Chat: {
-                screen: ChatStack,
-                navigationOptions: {
-                    title: "Chat"
-                }
-            }
-        },
-        {
-            defaultNavigationOptions: ({ navigation }) =>  ({
-                tabBarIcon: ({ focused, tintColor }) => {
-                    const { routeName } = navigation.state;
-                    let iconName;
-                    if (routeName === "Home") {
-                        iconName = 'ios-home';
-                    }
-                    else if (routeName === "Chat") {
-                        iconName = 'ios-chatbubbles';
-                    }
-                    return <Ionicons name={iconName} size={25} color={tintColor} />;
-                }
-            }),
-            shifting:true,
-            initialRouteName: 'Home',
-            tabBarOptions: {
-                activeTintColor: "#3f48cc",
-                inactiveTintColor: "#787fec"
-            },
-            barStyle: { backgroundColor: '#3f48cc'}
-        }
-    )
-);
+const MainStack = createAppContainer(StackNavigator);
 
 const styles = StyleSheet.create({
     myicon : {

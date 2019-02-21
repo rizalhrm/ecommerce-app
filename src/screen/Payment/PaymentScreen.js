@@ -40,7 +40,7 @@ export default class PaymentScreen extends Component {
     }
 
     formatNumber = (num) => {
-        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
     }
 
     finish = (total, idbank) => {
@@ -218,7 +218,7 @@ export default class PaymentScreen extends Component {
                                         ):
                                         (
                                             <Button style={{width: 90, alignItems: 'center'}} full disabled>
-                                            <Text style={{color: '#fff', textAlign: 'center'}}>Finish</Text>
+                                            <Text style={{color: '#fff', textAlign: 'center'}}>PAY NOW</Text>
                                             </Button>
                                         )
                                     }

@@ -37,9 +37,9 @@ export const addToCart = (product_id, price) => {
   }
 }
 
-export const increaseQty = (id, body) => {
+export const updateQty = (id, body) => {
   return {
-    type: " INCREASE_QTY",
+    type: "UPDATE_QTY",
     payload: axios({
                 method: 'patch',
                 url: `http://192.168.0.26:3333/api/v1/order/${id}`,
@@ -47,18 +47,6 @@ export const increaseQty = (id, body) => {
              })
   };
 };
-
-export const decreaseQty = (id, body) => {
-  return {
-    type: "DECREASE_QTY",
-    payload: axios({
-                method: 'patch',
-                url: `http://192.168.0.26:3333/api/v1/order/${id}`,
-                data: body
-             })
-  };
-};
-
 
 export const deleteCart = (id) => {
   return {

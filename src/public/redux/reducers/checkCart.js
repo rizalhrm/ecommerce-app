@@ -6,6 +6,7 @@ const initialState = {
     switch (action.type) {
       case 'CHECK_CART_FULFILLED':
         return {
+          ...state,
           checkCart: action.payload.data
         }
 

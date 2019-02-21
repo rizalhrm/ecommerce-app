@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import  {Container, Icon, Content} from 'native-base';
-import { Card, Button, Image } from 'react-native-elements';
+import { Card, Image, Button } from 'react-native-elements';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { connect } from 'react-redux';
 import { saveProductDetail } from '../../public/redux/actions/products';
@@ -50,7 +50,7 @@ class DetailProduct extends React.Component {
     }
 
     formatNumber = (num) => {
-        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
     }
     
     render(){
@@ -63,7 +63,7 @@ class DetailProduct extends React.Component {
                     textContent={'Loading...'}
                     textStyle={styles.spinnerTextStyle}
                     />
-                <Card
+                <Card containerStyle={{borderRadius: 13, marginBottom: 15}}
                 title={this.props.products.productDetails.name} titleStyle={{fontSize: 18}}>
                 <Image
                 source={{ uri: this.props.products.productDetails.image }}
@@ -73,16 +73,17 @@ class DetailProduct extends React.Component {
                     <Text style={{color: 'black', marginBottom: 10, fontSize:16, justifyContent: 'space-between', textAlign:"center"}}>
                     Rp {this.formatNumber(parseInt(this.props.products.productDetails.price))}
                     </Text>
-                    <Text style={{fontWeight: 'bold' , color: 'black'}}>Description : </Text>
-                    <Text style={{color: 'black', marginBottom: 10, fontSize:13, alignSelf:"stretch", justifyContent:"center"}}>
-                    {this.props.products.productDetails.description}
-                    </Text>
                     <Button
                     icon={<Icon name='cart' style={{color: 'white'}}/>}
-                    backgroundColor='#03A9F4'
-                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                    buttonStyle={{borderRadius: 6, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor:'#3f48cc'}}
                     title='Add to Cart' onPress={this.addToCart}/>
                 </View>
+                </Card>
+                <Card containerStyle={{borderRadius: 13, marginTop: -6, marginBottom: 15}}>
+                    <Text style={{fontWeight: 'bold', fontSize:15, color: 'black'}}>Description : </Text>
+                    <Text style={{color: 'black', marginBottom: 10, fontSize:14, alignSelf:"stretch", justifyContent:"center"}}>
+                    {this.props.products.productDetails.description}
+                    </Text>
                 </Card>
             </Content>
         </Container>

@@ -12,22 +12,12 @@ import { View,
     Footer,
     CardItem, Card
 } from 'native-base';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { connect } from 'react-redux';
-import { getCarts, decreaseQty, increaseQty, deleteCart } from '../../public/redux/actions/carts';
-import axios from 'axios';
+import { getCarts, updateQty, deleteCart } from '../../public/redux/actions/carts';
 
 import ToShop from './components/ToShop';
 
 class CartScreen extends Component {
-
-    constructor(){
-        super();
-        this.state = {
-            product : [],
-            price : 0
-        }
-    }
 
     componentDidMount() {
         this.getCart();
@@ -47,120 +37,79 @@ class CartScreen extends Component {
                     text: "Yes",
                     style: "cancel",
                     onPress: async () => {
-                        const del = await this.props.dispatch(deleteCart(id));
-                        if (del) {
-                            this.getCart();
-                        }
+                        await this.props.dispatch(deleteCart(id));
+                        this.getCart();
                     }
                 }
             ]
         )
     }
 
-    decreaseQty = (qty, id, price) => () => {
-
-        if (qty === 1) {
-            return false;
-          } else {
-
-            axios({
-                method: 'patch',
-                url: `http://192.168.0.26:3333/api/v1/order/${id}`,
-                data: {
-                    qty: qty - 1,
-                    price : (qty - 1) * price
-                }
-            })
-            .then(res =>  {
-                
-            })
-    
-            this.setState(prevState => ({
-              cart: prevState.cart.map(obj =>
-                obj.id === id
-                  ? Object.assign(obj, {
-                      qty : obj.qty - 1,
-                      price: (obj.qty - 1) * price
-                    })
-                  : obj
-              )
-            }));
-          }
+    decreaseQty = (item) => {
+        if (item.qty == 1) {
+            item.qty = 1
+        } else {
+            item.qty -= 1
+        }
+        
+        let qty = item.qty
+        let id = item.id
+        this.updateQty(id, qty)
     };
 
-    increaseQty = (qty, id, price) => () => {
-
-        axios({
-            method: 'patch',
-            url: `http://192.168.0.26:3333/api/v1/order/${id}`,
-            data: {
-                qty: qty + 1,
-                price : (qty + 1) * price
-            }
-        })
-        .then(res =>  {
-
-        })
-
-        this.setState(prevState => ({
-            cart: prevState.cart.map(obj =>
-              obj.id === id
-                ? Object.assign(obj, {
-                    qty: obj.qty + 1,
-                    price: (obj.qty + 1) * price
-                  })
-                : obj
-            )
-          }));  
-
+    increaseQty = (item) => {
+        item.qty += 1
+        let qty = item.qty
+        let id = item.id	
+        this.updateQty(id, qty)
     };
+
+    updateQty(id, qty) {
+        this.props.dispatch(updateQty(id, {qty:qty}))
+    }
 
     formatNumber = (num) => {
-        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
     }
 
     render(){
-        console.log(this.props.carts.carts.data)
-        let totalItem = 0;
+        let totalItem = this.props.carts.length;
         let totalPrice = 0;
+        if ( this.props.carts.carts.data) {
+        this.props.carts.carts.data.forEach(function(item) {
+            totalPrice += item.price * item.qty
+        });
+        }
+
         return(
             <Container>
                 <Content>
-                <Spinner
-                    visible={this.props.carts.isLoading}
-                    textContent={'Loading...'}
-                    textStyle={styles.spinnerTextStyle}
-                    />
                     <FlatList
                         data={this.props.carts.carts.data}
                         renderItem={({ item, index }) => (
-                        <Card>
+                        <Card style={{borderRadius: 6, marginRight: 8, marginLeft:8}}>
                             <CardItem>
                                 <Body>
                                 <View style={styles.container}>
                                     <View><Thumbnail square source={{ uri: item.product.image }} /></View>
                                     <View style={[styles.col, styles.colCenter]}>
-                                        <View><Text style={{fontSize: 17}}>{item.product.name}</Text></View>
+                                        <View><Text numberOfLines={1} style={{fontSize: 17}}>{item.product.name}</Text></View>
                                         <View><Text style={{ color: 'black' , fontSize: 14 }}>Rp. {this.formatNumber(item.product.price)}</Text></View>
                                     </View>
                                     <View style={[styles.col, styles.colCenter]}>
                                         <View style={styles.row}>
                                             <View style={styles.dempet}>
-                                                <TouchableOpacity style={styles.quantitystyling} onPress={this.decreaseQty(item.qty, item.id, item.product.price)}>
-                                                    <Icon style={{ color: '#fff', fontSize: 17, top: 4}} name="remove" />
+                                                <TouchableOpacity style={styles.quantitystyling} onPress={() => this.decreaseQty(item)}>
+                                                    <Icon style={{ color: '#000', fontSize: 17, top: 4}} name="remove" />
                                                 </TouchableOpacity>
                                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                     <Text>{item.qty}</Text>
                                                 </View>
-                                                <TouchableOpacity style={styles.quantitystylingvv} onPress={this.increaseQty(item.qty, item.id, item.product.price)}>
-                                                    <Icon style={{ color: '#fff', fontSize: 17, top: 4}} name="add" />
+                                                <TouchableOpacity style={styles.quantitystylingvv} onPress={() => this.increaseQty(item)}>
+                                                    <Icon style={{ color: '#000', fontSize: 17, top: 4}} name="add" />
                                                 </TouchableOpacity>
-                                            </View>
-                                            <View style={{alignItems : 'center'}}>
                                                 <TouchableWithoutFeedback onPress={() => this.delCart(item.id, item.product.name)}>
-                                                    <View>
-                                                        <Icon name="trash" style={{color: '#ff0a0a', fontSize : 20, marginTop: 5}}/>
-                                                    </View>
+                                                    <Icon name="trash" style={{color: '#ff0a0a', fontSize : 20, marginTop: 5}}/>
                                                 </TouchableWithoutFeedback>
                                             </View>
                                         </View>
@@ -171,11 +120,13 @@ class CartScreen extends Component {
                         </Card>
                         )}
                         keyExtractor={(item, index) => index.toString()}
+                        refreshing={this.props.carts.isLoading}
+                        onRefresh={this.getCart}
                         />
                     
                 </Content>
                 <Footer style={{ marginTop: 80, backgroundColor :  'transparent'}}>
-                    {this.props.carts.carts.length < 1 ? <ToShop/> : <Card style={{position : 'absolute' , bottom : 10}}>
+                    {this.props.carts.length < 1 ? <ToShop/> : <Card style={{position : 'absolute' , bottom : 10, borderRadius: 6}}>
                 <CardItem>
                 <Body>
                     <Text>Total Item: {totalItem}</Text>
@@ -210,9 +161,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps)(CartScreen)
 
 const styles = StyleSheet.create({
-    spinnerTextStyle: {
-        color: '#fff'
-    },
     container: {
         flex: 1,
         flexDirection: 'row'
@@ -228,14 +176,16 @@ const styles = StyleSheet.create({
     dempet: {
         flexDirection:'row',
         flexWrap:'wrap',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'flex-end'
     },
     row: {
         flex: 1,
-        flexDirection: 'column'
+        flexDirection: 'column',
+        justifyContent: 'center'
     },
     quantitystyling: {
-        backgroundColor: '#c3c3c3',
+        backgroundColor: '#fff',
         borderRadius: 19,
         width: 25,
         height: 25,
@@ -244,7 +194,7 @@ const styles = StyleSheet.create({
         alignContent: 'center' 
     },
     quantitystylingvv: {
-        backgroundColor: '#c3c3c3',
+        backgroundColor: '#fff',
         borderRadius: 19,
         width: 25,
         height: 25,
