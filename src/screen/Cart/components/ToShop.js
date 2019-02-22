@@ -5,7 +5,7 @@ class ToShop extends Component{
 
     render(){
         return(
-            <View style={{ marginTop : -400 }}>
+            <View style={{ marginTop : -450 }}>
                 <Image style={{ width: 350, height: 300, alignContent: 'center' }} source={{uri: 'https://bit.ly/2DeP5MJ'}} />
             </View>
         )

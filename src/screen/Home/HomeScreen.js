@@ -1,22 +1,50 @@
 import React from 'react';
-import { Image, StyleSheet, FlatList, View, TouchableWithoutFeedback } from 'react-native';
-import { Container, Content, Card, Text, Left, Right, List, CardItem, Button, Thumbnail, Body} from 'native-base';
+import { Image, StyleSheet, FlatList, View, TouchableWithoutFeedback, TouchableOpacity, ScrollView } from 'react-native';
+import { Container, Card, Text, Button, Body} from 'native-base';
 import Swiper from 'react-native-swiper';
 import StarRating from "react-native-star-rating";
-import Spinner from 'react-native-loading-spinner-overlay';
 import { connect } from 'react-redux';
 import { getProducts, saveProductDetail } from '../../public/redux/actions/products';
 
 class HomeScreen extends React.Component {
 
+    constructor() {
+        super();
+        this.state = {
+          hasMore: false,
+          search: "",
+          position: 1,
+          interval: null,
+        }
+      }
+
     componentDidMount() {
         this.getData();
     }
 
-    getData = () => {
-        this.props.dispatch(getProducts());
+    getData = async () => {
+        const get = await this.props.dispatch(getProducts());
+        if (get) {
+            this.setState({
+                hasMore: this.props.products.hasMore
+            });
+        }
     }
 
+    loadMoreData = async () => {
+        this.setState({
+          hasMore: false
+        });
+        let url = this.props.products.results.nextPage;
+        const load = await this.props.dispatch(getProducts(url));
+        if (load) {
+          this.setState({
+            hasMore: this.props.products.hasMore
+          });
+        }
+      };
+    
+    
     formatNumber = (num) => {
         return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
     }
@@ -30,47 +58,70 @@ class HomeScreen extends React.Component {
 
     renderItem = ({ item, index }) => (
         <TouchableWithoutFeedback onPress={()=> this.handleNavigateDetail(item.id)}>
-        <Card style={{marginRight: 8, marginLeft:8 , borderRadius: 8}}>
-        <CardItem>
-            <Left>
-                <Thumbnail square large style={{width: 100, height: 100, marginTop: 5, marginBottom: 5}} source={{ uri: item.image }} />
-            </Left>
-            <Body style={{alignItems: "flex-start", alignSelf: "center"}}>
-                <Text style={{fontSize: 18}} numberOfLines={1}>{item.name}</Text>
-                <Text style={{fontSize: 15}}>Rp {this.formatNumber(item.price)}</Text>
-                <StarRating
-                      disabled={true}
-                      maxStars={5}
-                      starSize={15}
-                      emptyStar={"ios-star"}
-                      fullStar={"ios-star"}
-                      halfStar={"ios-star-half"}
-                      iconSet={"Ionicons"}
-                      fullStarColor={"#ff7919"}
-                      emptyStarColor={"grey"}
-                      rating={item.rating}
+
+        <Card style={{marginRight: 8, marginLeft:8 , marginBottom: 8 ,borderRadius: 8, width: 190, height: 280}}>
+            <Image source={{uri: item.image}} style={styles.image}/>
+            <Body style={{paddingLeft: 10, paddingTop: 10}}>
+              <Text numberOfLines={1} style={{color: '#212121', fontSize: 15, paddingBottom: 5}}>{item.name}</Text>
+              
+              <Text style={{ fontSize: 14, color : 'black', marginBottom:2}}>Rp {this.formatNumber(item.price)}</Text>
+              <View>
+                    <StarRating
+                            disabled={true}
+                            maxStars={5}
+                            starSize={15}
+                            emptyStar={"ios-star"}
+                            fullStar={"ios-star"}
+                            halfStar={"ios-star-half"}
+                            iconSet={"Ionicons"}
+                            fullStarColor={"#ff7919"}
+                            emptyStarColor={"grey"}
+                            rating={item.rating}
                     />
-            </Body>
-            <Right>
-                <Button style={{height: 30, backgroundColor: '#3f48cc'}} primary onPress={()=> this.handleNavigateDetail(item.id)}>
+              </View>
+              <View style={{flexDirection:'row', flexWrap:'wrap', paddingTop: 10}}>
+                <Button style={{height: 30, backgroundColor: '#0086cb'}} primary onPress={()=> this.handleNavigateDetail(item.id)}>
                     <Text>View</Text>
                 </Button>
-            </Right>
-        </CardItem>
+
+              </View>
+            </Body>
         </Card>
+
         </TouchableWithoutFeedback>
     )
     
     render(){
-        console.log(this.props.products)
+
+        const isCloseToBottom = ({
+            layoutMeasurement,
+            contentOffset,
+            contentSize
+          }) => {
+            const paddingToBottom = 20;
+            return (
+              layoutMeasurement.height + contentOffset.y >=
+              contentSize.height - paddingToBottom
+            );
+          };
+      
         return (
         <Container>
-            <Spinner
+            {/* <Spinner
                     visible={this.props.products.isLoading}
                     textContent={''}
                     textStyle={styles.spinnerTextStyle}
-            />
-            <Content>
+            /> */}
+            <View >
+                <ScrollView
+                    onScroll={({ nativeEvent }) => {
+                    if (isCloseToBottom(nativeEvent) && this.state.hasMore) {
+                        this.loadMoreData();
+                    }
+                    }}
+                    scrollEventThrottle={16}
+                >
+
                 <Swiper autoplay={true} style={styles.wrapper} paginationStyle={{position:'absolute', top:300, right: 10, bottom: 15}} activeDotColor="#dd0057">
                     <View style={styles.slide}>
                         <Image style={{width:"100%", height:300, alignItems: 'center'}} source={{uri : "https://www.wallpaperup.com/uploads/wallpapers/2015/04/04/655988/d0c1f4c962257bf0cbd00ba015724803-700.jpg"}} />
@@ -84,20 +135,22 @@ class HomeScreen extends React.Component {
                 </Swiper>
 
                 <View style={{ flex: 1, flexDirection: "row", marginBottom: 10, marginLeft:10, marginTop: -10 }}>
-                    <View style={{ width: 10, height: 25, backgroundColor: "#3f48cc" }}/>
+                    <View style={{ width: 10, height: 25, backgroundColor: "#0086cb" }}/>
                         <Text style={{ fontWeight: "bold", fontSize: 20, marginLeft: 5 }}>
                                 Products List
                         </Text>
                 </View>
-                <View style={{flex: 1}}>
                         <FlatList
                             data={this.props.products.results.data}
                             renderItem={this.renderItem}
                             keyExtractor={this._keyExtractor}
+                            refreshing={this.props.products.isLoading}
+                            horizontal={false}
+                            numColumns={2}
                         />
-                </View>
-            
-            </Content>
+                </ScrollView>
+            </View>
+
         </Container>
         )
     }
@@ -124,6 +177,31 @@ const styles = StyleSheet.create({
     bestSeller: {
         fontSize: 13,
         marginRight: 10
+    },
+    spinnerTextStyle: {
+        color: '#fff'
+    },
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignSelf: 'center'
+    },
+    topMargin: {
+        flex: 1,
+        marginTop : 8
+    },
+    topMarginTwo: {
+        flex: 1,
+        marginTop : 16
+    },
+    topMarginTri: {
+        flex: 1,
+        marginTop : 25
+    },
+    image: {
+        margin: 2,
+        height: 151
     },
     spinnerTextStyle: {
         color: '#fff'

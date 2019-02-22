@@ -21,7 +21,7 @@ export default class ChatScreen extends Component {
               <List>
                 <ListItem avatar>
                   <Left>
-                    <Thumbnail source={{ uri: 'https://bit.ly/2Gfzmks' }} />
+                    <Thumbnail source={{ uri: 'http://chittagongit.com//images/smartphone-icon-png/smartphone-icon-png-27.jpg' }} />
                   </Left>
                   <Body>
                     <Text style={{fontWeight : 'bold'}}><Icon style={{ fontSize : 15 }} name='checkmark-circle-outline'/>Promo Zona Gadget</Text>

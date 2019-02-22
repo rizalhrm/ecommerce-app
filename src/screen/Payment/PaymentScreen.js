@@ -47,7 +47,7 @@ export default class PaymentScreen extends Component {
 
         axios({
             method: 'get',
-            url: 'http://192.168.0.26:3333/api/v1/orders/destroy'
+            url: 'http://192.168.0.12:3333/api/v1/orders/destroy'
         })
         .then(res => {
             this.props.navigation.navigate('InfoPayment', {'total' : total, 'idbank' : idbank})
@@ -61,7 +61,7 @@ export default class PaymentScreen extends Component {
     componentDidMount() {
         axios({
             method: 'get',
-            url: 'http://192.168.0.26:3333/api/v1/banks'
+            url: 'http://192.168.0.12:3333/api/v1/banks'
         })
         .then(res => {
             this.setState({
@@ -74,7 +74,7 @@ export default class PaymentScreen extends Component {
 
         axios({
             method: 'get',
-            url: 'http://192.168.0.26:3333/api/v1/couriers'
+            url: 'http://192.168.0.12:3333/api/v1/couriers'
         })
         .then(res => {
             this.setState({
@@ -212,12 +212,12 @@ export default class PaymentScreen extends Component {
                                     {
                                         isValid && this.state.chosenCourier != '0' && this.state.chosenBank != '0' ?
                                         (
-                                            <Button style={{width: 90, alignItems: 'center'}} full primary onPress={() => this.finish(total, idbank)}>
-                                            <Text style={{color: '#fff', textAlign: 'center'}}>Finish</Text>
+                                            <Button style={{width: 100, alignItems: 'center'}} full primary onPress={() => this.finish(total, idbank)}>
+                                            <Text style={{color: '#fff', textAlign: 'center'}}>PAY NOW</Text>
                                             </Button>
                                         ):
                                         (
-                                            <Button style={{width: 90, alignItems: 'center'}} full disabled>
+                                            <Button style={{width: 100, alignItems: 'center'}} full disabled>
                                             <Text style={{color: '#fff', textAlign: 'center'}}>PAY NOW</Text>
                                             </Button>
                                         )

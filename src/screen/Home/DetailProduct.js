@@ -58,11 +58,7 @@ class DetailProduct extends React.Component {
         return (
         <Container>
             <Content>
-            <Spinner
-                    visible={this.props.products.isLoading}
-                    textContent={'Loading...'}
-                    textStyle={styles.spinnerTextStyle}
-                    />
+            
                 <Card containerStyle={{borderRadius: 13, marginBottom: 15}}
                 title={this.props.products.productDetails.name} titleStyle={{fontSize: 18}}>
                 <Image
@@ -75,7 +71,7 @@ class DetailProduct extends React.Component {
                     </Text>
                     <Button
                     icon={<Icon name='cart' style={{color: 'white'}}/>}
-                    buttonStyle={{borderRadius: 6, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor:'#3f48cc'}}
+                    buttonStyle={{borderRadius: 6, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor:'#0086cb'}}
                     title='Add to Cart' onPress={this.addToCart}/>
                 </View>
                 </Card>

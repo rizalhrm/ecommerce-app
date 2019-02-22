@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {createAppContainer, createStackNavigator, createBottomTabNavigator} from 'react-navigation';
+import {createAppContainer, createStackNavigator, createBottomTabNavigator, createSwitchNavigator} from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Icon} from 'native-base';
 import { Provider } from 'react-redux';
@@ -12,22 +12,29 @@ import ChatScreen from './screen/ChatScreen';
 import PaymentScreen from './screen/Payment/PaymentScreen';
 import InfoPayment from './screen/Payment/InfoPayment';
 import CartCounter from './CartCounter';
+import LoginScreen from './screen/Login/LoginScreen';
+import RegisterScreen from './screen/Login/RegisterScreen';
+import ProfilScreen from './screen/Login/ProfilScreen';
+
 import store from './public/redux/store';
 
-const StackNavigator = createStackNavigator({
+const AppNavigator = createStackNavigator({
     Home: {
         screen: createBottomTabNavigator({
             Home: {
-                screen: HomeScreen,
-                navigationOptions: {
-                    title: "Home"
-                }
+                screen: HomeScreen
             },
             Chat: {
                 screen: ChatScreen,
-                navigationOptions: {
-                    title: "Chat"
-                }
+                navigationOptions: () => ({
+                    title : "Chat"
+                })
+            },
+            Profile: {
+                screen: ProfilScreen,
+                navigationOptions: () => ({
+                    headerMode: 'none'
+                })
             }
         },
         {
@@ -41,13 +48,16 @@ const StackNavigator = createStackNavigator({
                     else if (routeName === "Chat") {
                         iconName = 'ios-chatbubbles';
                     }
+                    else if (routeName === "Profile") {
+                        iconName = 'ios-contact';
+                    }
                     return <Ionicons name={iconName} size={25} color={tintColor} />;
                 }
             }),
             initialRouteName: 'Home',
             tabBarOptions: {
-                activeTintColor: "#3f48cc",
-                inactiveTintColor: "#787fec",
+                activeTintColor: "#005a9a",
+                inactiveTintColor: "#0086cb",
                 labelStyle: {
                     fontSize: 12,
                 }
@@ -56,7 +66,7 @@ const StackNavigator = createStackNavigator({
         navigationOptions: ({navigation}) => ({
             title: "Zona Gadget",
             headerStyle: {
-                backgroundColor: '#3f48cc'
+                backgroundColor: '#0086cb'
             },
             headerTintColor: '#fff',
             headerRight: (
@@ -74,7 +84,7 @@ const StackNavigator = createStackNavigator({
         navigationOptions: ({navigation}) => ({
             title: "Detail Of Product",
             headerStyle: {
-                backgroundColor: '#3f48cc',
+                backgroundColor: '#0086cb',
             },
             headerTintColor: '#fff',
             headerRight: (
@@ -92,7 +102,7 @@ const StackNavigator = createStackNavigator({
         navigationOptions: () => ({
             title: "Shopping Cart",
             headerStyle: {
-                backgroundColor: '#3f48cc',
+                backgroundColor: '#0086cb',
             },
             headerTintColor: '#fff'
         })
@@ -102,7 +112,7 @@ const StackNavigator = createStackNavigator({
         navigationOptions: ({navigation}) => ({
             title: "Payment",
             headerStyle: {
-                backgroundColor: '#3f48cc',
+                backgroundColor: '#0086cb',
             },
             headerTintColor: '#fff',
             headerRight: (
@@ -117,30 +127,47 @@ const StackNavigator = createStackNavigator({
     },
     InfoPayment: {
         screen: InfoPayment,
-        navigationOptions: ({navigation}) => ({
-            title: "Info Payment",
-            headerStyle: {
-                backgroundColor: '#3f48cc',
-            },
-            headerTintColor: '#fff'
-        })
-    }
-})
-
-const ChatStack = createStackNavigator({
-    Chat: {
-        screen: ChatScreen,
         navigationOptions: () => ({
-            title: "Chat",
+            title: "Info Payment",
+            headerLeft: null,
             headerStyle: {
-                backgroundColor: '#3f48cc',
+                backgroundColor: '#0086cb',
             },
             headerTintColor: '#fff'
         })
     }
 })
 
-const MainStack = createAppContainer(StackNavigator);
+const LoginNavigator = createStackNavigator({
+    Login: {
+        screen: LoginScreen,
+        navigationOptions: () => ({
+            header: null
+        })
+    },
+    Register: {
+        screen: RegisterScreen,
+        navigationOptions: () => ({
+            title: "Register",
+            headerStyle: {
+                backgroundColor: '#44b6fd',
+            },
+            headerTintColor: '#fff'
+        }),
+    }
+})
+
+const MainStack = createAppContainer(createSwitchNavigator(
+    {
+        LoginNavigator: LoginNavigator,
+        AppNavigator : AppNavigator
+    },
+    {
+      initialRouteName: 'LoginNavigator'
+    }
+    
+    )
+)
 
 const styles = StyleSheet.create({
     myicon : {

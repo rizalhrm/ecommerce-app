@@ -14,7 +14,7 @@ class CartCounter extends React.Component {
     componentDidMount() {
         axios({
             method: 'get',
-            url: `http://192.168.0.26:3333/api/v1/orders`
+            url: `http://192.168.0.12:3333/api/v1/orders`
         })
         .then(res => {
             this.setState({

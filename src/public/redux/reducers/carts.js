@@ -30,9 +30,24 @@ const initialState = {
           length: action.payload.data.length
         }
 
+      case 'ADD_TO_CART_PENDING':
+        return {
+          ...state,
+          isLoading: true,
+          addCart: action.payload
+        }
+
+      case 'ADD_TO_CART_REJECTED':
+        return {
+          ...state,
+          isLoading: false,
+          addCart: action.payload
+        }
+
       case 'ADD_TO_CART_FULFILLED':
         return {
           ...state,
+          isLoading: false,
           addCart: action.payload
         }
 

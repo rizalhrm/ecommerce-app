@@ -54,18 +54,25 @@ class CartScreen extends Component {
         
         let qty = item.qty
         let id = item.id
-        this.updateQty(id, qty)
+        let price = item.price * item.qty
+        this.updateQty(id, qty, price)
     };
 
     increaseQty = (item) => {
-        item.qty += 1
+        if (item.qty == 5) {
+            item.qty = 5
+        } else {
+            item.qty += 1
+        }
+
         let qty = item.qty
-        let id = item.id	
-        this.updateQty(id, qty)
+        let id = item.id
+        let price = item.price * item.qty
+        this.updateQty(id, qty, price)
     };
 
-    updateQty(id, qty) {
-        this.props.dispatch(updateQty(id, {qty:qty}))
+    updateQty(id, qty, price) {
+        this.props.dispatch(updateQty(id, {qty:qty, price:price}))
     }
 
     formatNumber = (num) => {
@@ -135,11 +142,11 @@ class CartScreen extends Component {
                 </CardItem>
                 <CardItem footer>
                     <Button bordered small
-                    style={{ fontSize: 12}}
+                    style={{ fontSize: 12, borderColor: '#0086cb'}}
                     onPress={()=> this.props.navigation.popToTop()}>
-                        <Text>Continue Shopping</Text>
+                        <Text style={{color: '#0086cb'}}>Continue Shopping</Text>
                     </Button>
-                    <Button small style={{marginLeft : 8, padding : 5}} onPress={() => {
+                    <Button small style={{marginLeft : 8, padding : 5, backgroundColor: '#0086cb'}} onPress={() => {
                         this.props.navigation.navigate('Payment', {totalPrice});
                     }}>
                         <Text>CheckOut</Text>
