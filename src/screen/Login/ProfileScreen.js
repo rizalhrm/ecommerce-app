@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View, Image, AsyncStorage, Alert } from 'react-native';
 import { Button, Text } from 'native-base';
-import { connect } from 'react-redux'
-import { removeToken } from '../../public/redux/actions/auth';
-import { getPropil } from '../../public/redux/actions/profile';
+import { connect } from 'react-redux';
+import { logout } from '../../public/redux/actions/auth';
+import { getUserProfile } from '../../public/redux/actions/profile';
 
 class ProfileScreen extends Component {
 
@@ -16,14 +16,14 @@ class ProfileScreen extends Component {
 
     componentDidMount() {
         if (this.props.auth.isAuth) {
-            this.getPropils();
+            this.getProfiles();
         }
     }
 
-    getPropils = async () => {
-        const user_id = this.props.auth.data.id;
+    getProfiles = async () => {
+        const user_id = this.props.auth.id;
         const token = this.props.auth.access_token.token;
-        await this.props.dispatch(getPropil(user_id, token));
+        await this.props.dispatch(getUserProfile(user_id, token));
     };
     
 
@@ -42,7 +42,7 @@ class ProfileScreen extends Component {
                   this.props.navigation.navigate("Login");
                 })
                 .catch(err => {
-                  console.log("error :v Logut " + err);
+                  console.log(`message : ${err}`);
                 });
             }
           }
@@ -56,30 +56,23 @@ class ProfileScreen extends Component {
     
 
     render() {
-        console.log(this.props.profile.username)
+        console.log(this.props.profile.data.username)
+        console.log(this.props.profile.data.email)
         return (
         <View style={styles.container}>
             <View style={styles.header}></View>
             <Image style={styles.avatar} source={{uri: 'https://secure.gravatar.com/avatar/c9490c639969cbcac686c3e66feb4648?s=800&d=identicon'}}/>
             <View style={styles.body}>
                 <View style={styles.bodyContent}>
-                <Text style={styles.name}>{this.props.profile.username}</Text>
-                <Text style={styles.email}>{this.props.profile.email}</Text>
+                <Text style={styles.name}>Username</Text>
+                <Text style={styles.email}>mail@domain.com</Text>
                 <Text style={styles.description}>Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet.</Text>
                 
                 <Button style={styles.buttonContainer}>
                     <Text>Edit Profile</Text>  
                 </Button>              
                 <Button style={[styles.buttonContainer, styles.buttonLogout]}
-                onPress={ async () => {
-                    try{
-                        await this.props.dispatch(removeToken())
-                        this.props.navigation.navigate('Login')
-                    } catch(e){
-                        console.log(e)
-                    }
-                }
-                }
+                onPress={() => this.handleLogout()}
                 >
                     <Text>Log Out</Text> 
                 </Button>

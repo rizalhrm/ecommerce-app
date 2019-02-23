@@ -1,9 +1,10 @@
 import axios from "axios";
+import { server } from '../../../data/server';
 
 export const getCarts = () => {
   return {
     type: 'GET_CART',
-    payload: axios.get('http://192.168.0.12:3333/api/v1/orders')
+    payload: axios.get(`${server.url}api/v1/orders`)
   }
 }
 
@@ -12,7 +13,7 @@ export const checkCart = (checkCartId, currentQty, currentPrice, price) => {
     type: 'CHECK_CART',
     payload: axios({
                 method: 'patch',
-                url: `http://192.168.0.12:3333/api/v1/order/${checkCartId}`,
+                url: `${server.url}api/v1/order/${checkCartId}`,
                 data: {
                     qty: currentQty + 1,
                     price: currentPrice + price
@@ -27,7 +28,7 @@ export const addToCart = (product_id, price) => {
     type: 'ADD_TO_CART',
     payload: axios({
                 method: 'post',
-                url: 'http://192.168.0.12:3333/api/v1/order',
+                url: `${server.url}api/v1/order`,
                 data: {
                     product_id: product_id,
                     price: price,
@@ -42,7 +43,7 @@ export const updateQty = (id, body) => {
     type: "UPDATE_QTY",
     payload: axios({
                 method: 'patch',
-                url: `http://192.168.0.12:3333/api/v1/order/${id}`,
+                url: `${server.url}api/v1/order/${id}`,
                 data: body
              })
   };
@@ -51,6 +52,6 @@ export const updateQty = (id, body) => {
 export const deleteCart = (id) => {
   return {
     type: 'DELETE_CART',
-    payload: axios.delete(`http://192.168.0.12:3333/api/v1/order/${id}`)
+    payload: axios.delete(`${server.url}api/v1/order/${id}`)
   }
 }

@@ -1,9 +1,10 @@
 import axios from "axios";
+import { server } from '../../../data/server';
 
 export const getProducts = (page) => {
   let url = "";
   if (page === undefined) {
-    url = "http://192.168.0.12:3333/api/v1/products?page=1";
+    url = `${server.url}api/v1/products?page=1`;
   } else {
     url = page;
   }
@@ -20,6 +21,6 @@ export const getProducts = (page) => {
 export const saveProductDetail = (item) => {
   return {
     type: 'SAVE_PRODUCT_DETAIL',
-    payload: axios.get(`http://192.168.0.12:3333/api/v1/product/${item}`)
+    payload: axios.get(`${server.url}api/v1/product/${item}`)
   }
 }

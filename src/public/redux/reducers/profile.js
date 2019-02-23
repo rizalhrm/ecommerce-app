@@ -5,21 +5,21 @@ const initialState = {
   
   export default profile = (state = initialState, action) => {
 	switch (action.type) {
-	  case "GET_FULL_PROPIL_PENDING":
-		return {
-		  isLoading: true
-		};
+	  case "GET_USERRPROFILE_PENDING":
+			return Object.assign({}, state, {
+				isLoading: true
+			});
   
-	  case "GET_FULL_PROPIL_REJECTED":
-		return {
-		  isLoading: false
-		};
+	  case "GET_USERPROFILE_REJECTED":
+			return Object.assign({}, state, {
+				isLoading: false
+			});
   
-	  case "GET_FULL_PROPIL_FULFILLED":
-		return {
-		  isLoading: false,
-		  data: action.payload.data
-		};
+	  case "GET_USERPROFILE_FULFILLED":
+			return Object.assign({}, state, {
+				isLoading: false,
+				data: action.payload
+			});
 
 	  default:
 		return state;

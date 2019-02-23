@@ -2,7 +2,6 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import  {Container, Icon, Content} from 'native-base';
 import { Card, Image, Button } from 'react-native-elements';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { connect } from 'react-redux';
 import { saveProductDetail } from '../../public/redux/actions/products';
 import { getCarts, checkCart, addToCart } from '../../public/redux/actions/carts';

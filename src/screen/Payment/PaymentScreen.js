@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import { Card, CardItem, Body, Button, Text, Container, Content, Item, Input, Label, Picker, Right, Left } from 'native-base';
 import axios from 'axios';
+import { server } from '../../data/server';
 
 export default class PaymentScreen extends Component {
 
@@ -47,7 +48,7 @@ export default class PaymentScreen extends Component {
 
         axios({
             method: 'get',
-            url: 'http://192.168.0.12:3333/api/v1/orders/destroy'
+            url: `${server.url}api/v1/orders/destroy`
         })
         .then(res => {
             this.props.navigation.navigate('InfoPayment', {'total' : total, 'idbank' : idbank})
@@ -61,7 +62,7 @@ export default class PaymentScreen extends Component {
     componentDidMount() {
         axios({
             method: 'get',
-            url: 'http://192.168.0.12:3333/api/v1/banks'
+            url: `${server.url}api/v1/banks`
         })
         .then(res => {
             this.setState({
@@ -74,7 +75,7 @@ export default class PaymentScreen extends Component {
 
         axios({
             method: 'get',
-            url: 'http://192.168.0.12:3333/api/v1/couriers'
+            url: `${server.url}api/v1/couriers`
         })
         .then(res => {
             this.setState({
@@ -212,7 +213,7 @@ export default class PaymentScreen extends Component {
                                     {
                                         isValid && this.state.chosenCourier != '0' && this.state.chosenBank != '0' ?
                                         (
-                                            <Button style={{width: 100, alignItems: 'center'}} full primary onPress={() => this.finish(total, idbank)}>
+                                            <Button style={{width: 100, alignItems: 'center', backgroundColor: '#0086cb'}} full onPress={() => this.finish(total, idbank)}>
                                             <Text style={{color: '#fff', textAlign: 'center'}}>PAY NOW</Text>
                                             </Button>
                                         ):

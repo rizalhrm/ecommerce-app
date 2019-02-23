@@ -4,6 +4,7 @@ import  {Container, Content, Button, Text} from 'native-base';
 import { Card, Image } from 'react-native-elements';
 
 import axios from 'axios';
+import { server } from '../../data/server';
 
 export default class InfoPayment extends React.Component {
 
@@ -21,7 +22,7 @@ export default class InfoPayment extends React.Component {
     componentDidMount() {
         axios({
             method: 'get',
-            url: `http://192.168.0.12:3333/api/v1/bank/${this.state.idbank}`
+            url: `${server.url}api/v1/bank/${this.state.idbank}`
         })
         .then(res => {
             this.setState({
@@ -62,7 +63,7 @@ export default class InfoPayment extends React.Component {
                     Total Transfer : Rp {this.formatNumber(total)}
                     </Text>
 
-                    <Button style={{backgroundColor: "#0086cb", justifyContent: 'space-between', alignSelf: 'center'}} onPress={()=> this.props.navigation.popToTop()}>
+                    <Button style={{backgroundColor: "#0086cb", justifyContent: 'space-between', alignSelf: 'center'}} onPress={()=> this.props.navigation.navigate('Home')}>
                         <Text>Continue Shopping</Text>
                     </Button>
                 </View>

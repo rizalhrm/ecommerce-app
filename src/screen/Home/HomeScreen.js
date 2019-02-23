@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, FlatList, View, TouchableWithoutFeedback, TouchableOpacity, ScrollView } from 'react-native';
 import { Container, Card, Text, Button, Body} from 'native-base';
 import Swiper from 'react-native-swiper';
+import Spinner from 'react-native-loading-spinner-overlay';
 import StarRating from "react-native-star-rating";
 import { connect } from 'react-redux';
 import { getProducts, saveProductDetail } from '../../public/redux/actions/products';
@@ -16,7 +17,7 @@ class HomeScreen extends React.Component {
           position: 1,
           interval: null,
         }
-      }
+    }
 
     componentDidMount() {
         this.getData();
@@ -107,11 +108,11 @@ class HomeScreen extends React.Component {
       
         return (
         <Container>
-            {/* <Spinner
+            <Spinner
                     visible={this.props.products.isLoading}
                     textContent={''}
                     textStyle={styles.spinnerTextStyle}
-            /> */}
+            />
             <View >
                 <ScrollView
                     onScroll={({ nativeEvent }) => {
@@ -130,7 +131,7 @@ class HomeScreen extends React.Component {
                         <Image style={{width:"100%", height:300, alignItems: 'center'}} source={{uri : "http://www.ubuntu-ast.org/largeimages/56/569081_pixel-3d-wallpaper.jpg"}} />
                     </View>
                     <View style={styles.slide}>
-                        <Image style={{width:"100%", height:300, alignItems: 'center'}} source={{uri : "https://bit.ly/2X8rMNH"}} />
+                        <Image style={{width:"100%", height:300, alignItems: 'center'}} source={{uri : "http://www.ubuntu-ast.org/largeimages/56/569081_pixel-3d-wallpaper.jpg"}} />
                     </View>
                 </Swiper>
 

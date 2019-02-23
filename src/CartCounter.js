@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import axios from 'axios';
+import { server } from './data/server';
 
 class CartCounter extends React.Component {
 
@@ -14,7 +15,7 @@ class CartCounter extends React.Component {
     componentDidMount() {
         axios({
             method: 'get',
-            url: `http://192.168.0.12:3333/api/v1/orders`
+            url: `${server.url}api/v1/orders`
         })
         .then(res => {
             this.setState({

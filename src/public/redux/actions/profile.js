@@ -1,11 +1,12 @@
 import axios from 'axios';
+import { server } from '../../../data/server';
 
-export const getPropil = (user_id, token) => {
+export const getUserProfile = (user_id, token) => {
 	return {
-	  type: "GET_FULL_PROPIL",
+	  type: "GET_USERPROFILE",
 	  payload: axios({
-		method: "get",
-		url: `http://192.168.0.12:3333/api/v1/profile/${user_id}`,
+		method: "post",
+		url: `${server.url}api/v1/auth/profile`,
 		headers: {
 		  Authorization: `Bearer ${token}`
 		}

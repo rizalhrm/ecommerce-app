@@ -13,6 +13,7 @@ import { View,
     CardItem, Card
 } from 'native-base';
 import { connect } from 'react-redux';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { getCarts, updateQty, deleteCart } from '../../public/redux/actions/carts';
 
 import ToShop from './components/ToShop';
@@ -91,6 +92,12 @@ class CartScreen extends Component {
         return(
             <Container>
                 <Content>
+                    <Spinner
+                    visible={this.props.carts.isLoading}
+                    textContent={'...'}
+                    textStyle={{color: '#fff'}}
+                    />
+
                     <FlatList
                         data={this.props.carts.carts.data}
                         renderItem={({ item, index }) => (

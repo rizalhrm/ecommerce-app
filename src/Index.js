@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, AsyncStorage} from 'react-native';
 import {createAppContainer, createStackNavigator, createBottomTabNavigator, createSwitchNavigator} from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Icon} from 'native-base';
@@ -14,28 +14,39 @@ import InfoPayment from './screen/Payment/InfoPayment';
 import CartCounter from './CartCounter';
 import LoginScreen from './screen/Login/LoginScreen';
 import RegisterScreen from './screen/Login/RegisterScreen';
-import ProfilScreen from './screen/Login/ProfilScreen';
-
+import ProfileScreen from './screen/Login/ProfileScreen';
+import Splash from './Splash';
 import store from './public/redux/store';
+
+const getCurrentRoute = (navigationState) => {
+    if (!navigationState) {
+        return null
+    } else if (!navigationState.routes) {
+        return navigationState
+    }
+
+    const route = navigationState.routes[navigationState.index]
+    if (route.routes) {
+        return getCurrentRoute(route)
+    }
+
+    return route
+}
+
+const Routes = {
+    TabStack: { key: "TabStack" },
+ 
+    Home: { key: "Home", title: "Zona Gadget" }, 
+    Chat: { key: "Chat", title: "Chat" },
+    Profile: { key: "Profile", title: "My Profile" },
+ }
 
 const AppNavigator = createStackNavigator({
     Home: {
         screen: createBottomTabNavigator({
-            Home: {
-                screen: HomeScreen
-            },
-            Chat: {
-                screen: ChatScreen,
-                navigationOptions: () => ({
-                    title : "Chat"
-                })
-            },
-            Profile: {
-                screen: ProfilScreen,
-                navigationOptions: () => ({
-                    headerMode: 'none'
-                })
-            }
+            [Routes.Home.key]: { screen: HomeScreen },
+            [Routes.Chat.key]: { screen:ChatScreen },
+            [Routes.Profile.key]: { screen: ProfileScreen },
         },
         {
             defaultNavigationOptions: ({ navigation }) =>  ({
@@ -54,30 +65,37 @@ const AppNavigator = createStackNavigator({
                     return <Ionicons name={iconName} size={25} color={tintColor} />;
                 }
             }),
-            initialRouteName: 'Home',
+            initialRouteName: Routes.Home.key,
             tabBarOptions: {
                 activeTintColor: "#005a9a",
                 inactiveTintColor: "#0086cb",
                 labelStyle: {
-                    fontSize: 12,
+                    fontSize: 12
                 }
-            }
-        }),
-        navigationOptions: ({navigation}) => ({
-            title: "Zona Gadget",
-            headerStyle: {
-                backgroundColor: '#0086cb'
             },
-            headerTintColor: '#fff',
-            headerRight: (
+            navigationOptions: ({navigation}) => {
+                const navRoute = getCurrentRoute(navigation.state)
+                , route = navRoute && navRoute.routeName && Routes[navRoute.routeName]
+                , title = route ? route.title : ""
+
+                return { 
+                    title, 
+                    headerStyle: {
+                        backgroundColor: '#0086cb'
+                    },
+                    headerTintColor: '#fff',
+                    headerRight: (
                     <View style={{padding: 5}}>
                         <CartCounter />
                         <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                             <Icon style={styles.myicon} name='cart'/>
                         </TouchableOpacity>
                     </View>
-                )
-          })
+                    )
+                }
+            }
+    
+        })
     },
     DetailProduct: {
         screen: DetailProduct,
@@ -159,15 +177,14 @@ const LoginNavigator = createStackNavigator({
 
 const MainStack = createAppContainer(createSwitchNavigator(
     {
+        Splash: Splash,
         LoginNavigator: LoginNavigator,
         AppNavigator : AppNavigator
     },
     {
-      initialRouteName: 'LoginNavigator'
+        initialRouteName: 'Splash'
     }
-    
-    )
-)
+))
 
 const styles = StyleSheet.create({
     myicon : {
