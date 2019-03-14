@@ -25,7 +25,7 @@ class LoginScreen extends React.Component {
             console.log(err);
             Alert.alert("Warning", "Login Failed !");
           });
-      };
+    };
     
     doLogin = async () => {
         await this.props.dispatch(

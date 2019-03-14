@@ -64,8 +64,8 @@ class ProfileScreen extends Component {
             <Image style={styles.avatar} source={{uri: 'https://secure.gravatar.com/avatar/c9490c639969cbcac686c3e66feb4648?s=800&d=identicon'}}/>
             <View style={styles.body}>
                 <View style={styles.bodyContent}>
-                <Text style={styles.name}>Username</Text>
-                <Text style={styles.email}>mail@domain.com</Text>
+                <Text style={styles.name}>Rizal Hermawan</Text>
+                <Text style={styles.email}>rizal@gmail.com</Text>
                 <Text style={styles.description}>Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet.</Text>
                 
                 <Button style={styles.buttonContainer}>

@@ -182,7 +182,7 @@ const MainStack = createAppContainer(createSwitchNavigator(
         AppNavigator : AppNavigator
     },
     {
-        initialRouteName: 'Splash'
+        initialRouteName: 'AppNavigator'
     }
 ))
 

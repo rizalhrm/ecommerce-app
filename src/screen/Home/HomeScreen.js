@@ -5,7 +5,7 @@ import Swiper from 'react-native-swiper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import StarRating from "react-native-star-rating";
 import { connect } from 'react-redux';
-import { getProducts, saveProductDetail } from '../../public/redux/actions/products';
+import { getProducts } from '../../public/redux/actions/products';
 
 class HomeScreen extends React.Component {
 
@@ -50,15 +50,10 @@ class HomeScreen extends React.Component {
         return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
     }
 
-    handleNavigateDetail (item) {
-        this.props.dispatch(saveProductDetail(item))
-        this.props.navigation.navigate('DetailProduct')
-    }
-
     _keyExtractor = (item, index) => item.id.toString();
 
     renderItem = ({ item, index }) => (
-        <TouchableWithoutFeedback onPress={()=> this.handleNavigateDetail(item.id)}>
+        <TouchableWithoutFeedback onPress={()=> this.props.navigation.navigate('DetailProduct', {item})}>
 
         <Card style={{marginRight: 8, marginLeft:8 , marginBottom: 8 ,borderRadius: 8, width: 190, height: 280}}>
             <Image source={{uri: item.image}} style={styles.image}/>
