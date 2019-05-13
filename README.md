@@ -1,4 +1,4 @@
-# Project Week 2nd
+# Project E-Commerce Mobile App
 
 Project E-Commerce dengan API dari AdonisJS
 
